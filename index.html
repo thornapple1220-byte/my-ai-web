@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lo-fi room</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    body { margin:0; background:#d4c5e2; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:'Press Start 2P',monospace; }
+    .room { text-align:center; }
+    .desk { background:#f5e6c8; border:4px solid #b8a99a; padding:20px; display:inline-block; image-rendering:pixelated; }
+    .monitor { background:#2d2d2d; border:6px solid #8b7355; padding:6px; margin-bottom:8px; }
+    .screen { background:#1a1a2e; border:2px solid #4a4a6a; padding:20px 30px; min-width:200px; }
+    .screen-label { color:#a8d8ea; font-size:8px; margin-bottom:10px; letter-spacing:2px; }
+    .clock { color:#ffd6e0; font-size:22px; letter-spacing:4px; text-shadow:0 0 10px #ffb3c6; }
+    .date { color:#b8f0c8; font-size:7px; margin-top:8px; letter-spacing:1px; }
+    .stand { background:#8b7355; width:30px; height:10px; margin:0 auto; }
+    .base { background:#6b5535; width:70px; height:6px; margin:0 auto; border-radius:2px; }
+    .room-title { color:#9b8bb4; font-size:8px; margin-top:16px; letter-spacing:2px; }
+    @media(max-width:400px){ .clock{font-size:16px;} .screen{padding:16px 14px;} }
+  </style>
+</head>
+<body>
+  <div class="room">
+    <div class="desk">
+      <div class="monitor">
+        <div class="screen">
+          <div class="screen-label">✦ current time ✦</div>
+          <div class="clock" id="clock">00:00:00</div>
+          <div class="date" id="date">loading...</div>
+        </div>
+      </div>
+      <div class="stand"></div>
+      <div class="base"></div>
+    </div>
+    <div class="room-title">♪ lo-fi pixel room ♪</div>
+  </div>
+  <script>
+    function update() {
+      const now = new Date();
+      document.getElementById('clock').textContent =
+        String(now.getHours()).padStart(2,'0') + ':' +
+        String(now.getMinutes()).padStart(2,'0') + ':' +
+        String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('date').textContent =
+        now.getFullYear() + '.' +
+        String(now.getMonth()+1).padStart(2,'0') + '.' +
+        String(now.getDate()).padStart(2,'0');
+    }
+    update(); setInterval(update, 1000);
+  </script>
+</body>
+</html>
