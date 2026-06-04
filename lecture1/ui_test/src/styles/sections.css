@@ -1,0 +1,8 @@
+/* 섹션 공통 스타일 */
+.section {
+  padding: 64px 0;
+}
+
+.section-title {
+  margin-bottom: 40px;
+}
