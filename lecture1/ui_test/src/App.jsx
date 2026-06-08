@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import NavigationSection from './components/sections/NavigationSection';
+import FlexNavigationSection from './components/sections/FlexNavigationSection';
 import ButtonSection from './components/sections/ButtonSection';
 import InputSection from './components/sections/InputSection';
 import DropdownSection from './components/sections/DropdownSection';
@@ -20,6 +21,7 @@ function App() {
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <NavigationSection />
+      <FlexNavigationSection />
       <ButtonSection />
       <InputSection />
       <DropdownSection />
