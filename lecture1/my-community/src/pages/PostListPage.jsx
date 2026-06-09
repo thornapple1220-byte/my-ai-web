@@ -79,9 +79,14 @@ function PostListPage() {
         sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider' }}
       >
         <Toolbar sx={{ minHeight: { xs: 56, sm: 64 } }}>
+
+          {/* 왼쪽 균형 공간 (데스크탑에서 로고 정중앙 유지용) */}
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }} />
+
+          {/* 가운데 로고 */}
           <Box
             onClick={() => navigate('/')}
-            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexGrow: 1 }}
+            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
           >
             <LocalCafeIcon sx={{ color: 'primary.main', mr: { xs: 0.5, sm: 1 }, fontSize: { xs: 22, sm: 26 } }} />
             <Typography
@@ -96,45 +101,48 @@ function PostListPage() {
             </Typography>
           </Box>
 
-          {/* 데스크탑 */}
-          {!isMobile && (
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Button
-                variant="outlined"
-                size="small"
-                startIcon={<PersonIcon />}
-                sx={{
-                  borderRadius: 20, height: 36, fontWeight: 600,
-                  borderColor: 'divider', color: 'text.primary',
-                  '&:hover': { borderColor: 'primary.main', color: 'primary.main', bgcolor: 'transparent' },
-                }}
-              >
-                {userProfile?.nickname || '카페러버'}님
-              </Button>
-              <Button
-                variant="contained"
-                size="small"
-                startIcon={<AddIcon />}
-                onClick={() => navigate('/posts/new')}
-                sx={{ borderRadius: 20, height: 36, fontWeight: 600, boxShadow: 'none' }}
-              >
-                게시물 추가
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                startIcon={<LogoutIcon />}
-                onClick={handleLogout}
-                sx={{
-                  borderRadius: 20, height: 36, fontWeight: 600,
-                  borderColor: 'divider', color: 'text.secondary',
-                  '&:hover': { borderColor: 'error.main', color: 'error.main', bgcolor: 'transparent' },
-                }}
-              >
-                로그아웃
-              </Button>
-            </Stack>
-          )}
+          {/* 오른쪽: 데스크탑 버튼들 */}
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+            {!isMobile && (
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<PersonIcon />}
+                  sx={{
+                    borderRadius: 20, height: 36, fontWeight: 600,
+                    borderColor: 'divider', color: 'text.primary',
+                    '&:hover': { borderColor: 'primary.main', color: 'primary.main', bgcolor: 'transparent' },
+                  }}
+                >
+                  {userProfile?.nickname || '카페러버'}님
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={<AddIcon />}
+                  onClick={() => navigate('/posts/new')}
+                  sx={{ borderRadius: 20, height: 36, fontWeight: 600, boxShadow: 'none' }}
+                >
+                  게시물 추가
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<LogoutIcon />}
+                  onClick={handleLogout}
+                  sx={{
+                    borderRadius: 20, height: 36, fontWeight: 600,
+                    borderColor: 'divider', color: 'text.secondary',
+                    '&:hover': { borderColor: 'error.main', color: 'error.main', bgcolor: 'transparent' },
+                  }}
+                >
+                  로그아웃
+                </Button>
+              </Stack>
+            )}
+          </Box>
+
         </Toolbar>
       </AppBar>
 
