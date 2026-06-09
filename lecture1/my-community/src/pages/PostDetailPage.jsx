@@ -188,24 +188,27 @@ function PostDetailPage() {
 
         {/* 좋아요 / 별점 */}
         <Box sx={{ px: { xs: 2, sm: 0 }, py: 1.5 }}>
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ minHeight: 36 }}>
-            <IconButton
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Box
               onClick={handleLike}
-              size="small"
-              sx={{ color: liked ? 'primary.main' : 'text.disabled', p: 0.5 }}
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                color: liked ? 'primary.main' : 'text.disabled',
+              }}
             >
               {liked
                 ? <FavoriteIcon sx={{ fontSize: 22 }} />
                 : <FavoriteBorderIcon sx={{ fontSize: 22 }} />}
-            </IconButton>
-            <Typography variant="body2" fontWeight={600} sx={{ lineHeight: 1 }}>{likeCount}</Typography>
+            </Box>
+            <Typography variant="body2" fontWeight={600}>{likeCount}</Typography>
             <Box sx={{ flexGrow: 1 }} />
             {post.rating && (
               <Rating
                 value={post.rating}
                 readOnly
-                size="small"
-                sx={{ color: 'primary.main', fontSize: '1.4rem' }}
+                sx={{ color: 'primary.main', fontSize: '1.375rem' }}
               />
             )}
           </Stack>
@@ -220,23 +223,22 @@ function PostDetailPage() {
           )}
 
           {post.tags?.length > 0 && (
-            <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 1.5 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 1.5 }}>
               {post.tags.map((tag) => (
                 <Chip
                   key={tag}
                   label={`#${tag}`}
-                  size="small"
                   variant="outlined"
                   color="primary"
                   sx={{
                     borderRadius: 20,
-                    fontSize: '0.7rem',
-                    height: 24,
-                    '& .MuiChip-label': { px: 1.5 },
+                    fontSize: '0.75rem',
+                    height: 28,
+                    '& .MuiChip-label': { px: 2 },
                   }}
                 />
               ))}
-            </Stack>
+            </Box>
           )}
 
           <Typography variant="caption" color="text.disabled" sx={{ display: 'block', mt: 1 }}>
