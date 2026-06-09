@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Box, Container, Typography, TextField, Button,
+  Box, Typography, TextField, Button,
   FormControlLabel, Checkbox, Alert, Stack, Divider,
 } from '@mui/material';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe';
@@ -18,10 +18,7 @@ function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username || !password) {
-      setError('아이디와 비밀번호를 입력해주세요.');
-      return;
-    }
+    if (!username || !password) { setError('아이디와 비밀번호를 입력해주세요.'); return; }
     setLoading(true);
     setError('');
     try {
@@ -38,124 +35,128 @@ function LoginPage() {
     <Box
       sx={{
         minHeight: '100vh',
-        bgcolor: 'background.default',
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         background: 'linear-gradient(135deg, #fff5f8 0%, #fce4ec 100%)',
+        px: 2,
+        py: 4,
+        boxSizing: 'border-box',
       }}
     >
-      <Container maxWidth="xs">
-        <Box
-          sx={{
-            bgcolor: 'background.paper',
-            borderRadius: 4,
-            p: 4,
-            boxShadow: '0 8px 32px rgba(233,30,140,0.12)',
-            textAlign: 'center',
-          }}
-        >
-          {/* 로고 영역 */}
-          <Box sx={{ mb: 3 }}>
-            <Box
-              sx={{
-                width: 80,
-                height: 80,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #e91e8c, #f48fb1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mx: 'auto',
-                mb: 2,
-                boxShadow: '0 4px 16px rgba(233,30,140,0.3)',
-              }}
-            >
-              <LocalCafeIcon sx={{ fontSize: 40, color: 'white' }} />
-            </Box>
-            <Typography
-              variant="h5"
-              fontWeight={800}
-              sx={{
-                background: 'linear-gradient(135deg, #e91e8c, #c2185b)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                letterSpacing: '-0.5px',
-              }}
-            >
-              AWESOME CAFÉ
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              예쁜 카페 공유 커뮤니티
-            </Typography>
-          </Box>
-
-          <Typography variant="h6" fontWeight={600} sx={{ mb: 3, color: 'text.primary' }}>
-            로그인
-          </Typography>
-
-          {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>{error}</Alert>}
-
-          <Box component="form" onSubmit={handleSubmit}>
-            <Stack spacing={2}>
-              <TextField
-                label="아이디"
-                variant="outlined"
-                fullWidth
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
-              />
-              <TextField
-                label="비밀번호"
-                type="password"
-                variant="outlined"
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    size="small"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    sx={{ color: 'primary.main' }}
-                  />
-                }
-                label={<Typography variant="caption" color="text.secondary">로그인 정보 저장</Typography>}
-                sx={{ alignSelf: 'flex-start', ml: 0 }}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                size="large"
-                disabled={loading}
-                sx={{ py: 1.5, fontSize: '1rem', borderRadius: 3 }}
-              >
-                {loading ? '로그인 중...' : '로그인'}
-              </Button>
-            </Stack>
-          </Box>
-
-          <Divider sx={{ my: 2 }} />
-
-          <Button
-            component={Link}
-            to="/register"
-            variant="outlined"
-            fullWidth
-            size="large"
-            sx={{ borderRadius: 3, py: 1.5 }}
+      {/* 카드 */}
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: { xs: '100%', sm: 440 },
+          bgcolor: 'background.paper',
+          borderRadius: { xs: 3, sm: 4 },
+          p: { xs: 3, sm: 4 },
+          boxShadow: '0 8px 40px rgba(233,30,140,0.13)',
+          textAlign: 'center',
+        }}
+      >
+        {/* 로고 */}
+        <Box sx={{ mb: 3 }}>
+          <Box
+            sx={{
+              width: { xs: 68, sm: 80 },
+              height: { xs: 68, sm: 80 },
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #e91e8c, #f48fb1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mx: 'auto',
+              mb: 1.5,
+              boxShadow: '0 4px 16px rgba(233,30,140,0.3)',
+            }}
           >
-            회원가입
-          </Button>
+            <LocalCafeIcon sx={{ fontSize: { xs: 34, sm: 40 }, color: 'white' }} />
+          </Box>
+          <Typography
+            fontWeight={800}
+            sx={{
+              background: 'linear-gradient(135deg, #e91e8c, #c2185b)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '-0.5px',
+              fontSize: { xs: '1.2rem', sm: '1.4rem' },
+            }}
+          >
+            AWESOME CAFÉ
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            예쁜 카페 공유 커뮤니티
+          </Typography>
         </Box>
-      </Container>
+
+        <Typography variant="h6" fontWeight={600} sx={{ mb: 2.5, color: 'text.primary', fontSize: { xs: '1rem', sm: '1.1rem' } }}>
+          로그인
+        </Typography>
+
+        {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 2, textAlign: 'left' }}>{error}</Alert>}
+
+        <Box component="form" onSubmit={handleSubmit}>
+          <Stack spacing={2}>
+            <TextField
+              label="아이디"
+              variant="outlined"
+              fullWidth
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
+            />
+            <TextField
+              label="비밀번호"
+              type="password"
+              variant="outlined"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  size="small"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  sx={{ color: 'primary.main' }}
+                />
+              }
+              label={<Typography variant="caption" color="text.secondary">로그인 정보 저장</Typography>}
+              sx={{ alignSelf: 'flex-start', ml: 0 }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              size="large"
+              disabled={loading}
+              sx={{ py: 1.5, fontSize: '1rem', borderRadius: 3 }}
+            >
+              {loading ? '로그인 중...' : '로그인'}
+            </Button>
+          </Stack>
+        </Box>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Button
+          component={Link}
+          to="/register"
+          variant="outlined"
+          fullWidth
+          size="large"
+          sx={{ borderRadius: 3, py: 1.5 }}
+        >
+          회원가입
+        </Button>
+      </Box>
     </Box>
   );
 }

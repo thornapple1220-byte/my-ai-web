@@ -70,7 +70,7 @@ function PostListPage() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: { xs: 8, sm: 4 } }}>
+    <Box sx={{ minHeight: '100vh', width: '100%', bgcolor: 'background.default', pb: { xs: 8, sm: 4 }, boxSizing: 'border-box' }}>
 
       {/* 상단 앱바 */}
       <AppBar
