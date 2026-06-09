@@ -204,20 +204,20 @@ function PostListPage() {
             </Typography>
           </Box>
         ) : (
-          <Grid container spacing={{ xs: 1, sm: 2 }}>
+          <Grid container spacing={{ xs: 2, sm: 2.5 }}>
             {posts.map((post) => (
-              <Grid item xs={6} sm={4} md={3} key={post.id}>
+              <Grid item xs={12} sm={4} md={4} key={post.id}>
                 <Card
                   elevation={0}
                   sx={{
                     border: '1px solid',
                     borderColor: 'divider',
-                    borderRadius: { xs: 2, sm: 3 },
+                    borderRadius: 3,
                     overflow: 'hidden',
                     transition: 'transform 0.2s, box-shadow 0.2s',
                     '&:hover': {
-                      transform: { sm: 'translateY(-4px)' },
-                      boxShadow: { sm: '0 8px 24px rgba(233,30,140,0.15)' },
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 8px 28px rgba(233,30,140,0.18)',
                     },
                   }}
                 >
@@ -242,7 +242,7 @@ function PostListPage() {
                           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
                           bgcolor: 'secondary.light', display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
-                          <LocalCafeIcon sx={{ fontSize: { xs: 32, sm: 48 }, color: 'primary.main', opacity: 0.4 }} />
+                          <LocalCafeIcon sx={{ fontSize: 64, color: 'primary.main', opacity: 0.35 }} />
                         </Box>
                       )}
                       {post.rating && (
@@ -250,47 +250,43 @@ function PostListPage() {
                           label={`⭐ ${post.rating}`}
                           size="small"
                           sx={{
-                            position: 'absolute', top: 6, right: 6,
-                            bgcolor: 'rgba(255,255,255,0.92)',
-                            fontSize: '0.65rem', height: 18, fontWeight: 700,
+                            position: 'absolute', top: 10, right: 10,
+                            bgcolor: 'rgba(255,255,255,0.93)',
+                            fontSize: '0.75rem', height: 24, fontWeight: 700,
                           }}
                         />
                       )}
                     </Box>
 
-                    <CardContent sx={{ p: { xs: 1, sm: 1.5 } }}>
-                      <Typography
-                        fontWeight={600}
-                        noWrap
-                        sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
-                      >
+                    <CardContent sx={{ p: 2 }}>
+                      <Typography fontWeight={700} noWrap sx={{ fontSize: '0.95rem', mb: 0.5 }}>
                         {post.title}
                       </Typography>
 
-                      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 0.5 }}>
-                        <Stack direction="row" alignItems="center" spacing={0.5}>
-                          <Avatar sx={{ width: 14, height: 14, fontSize: '0.45rem', bgcolor: 'primary.light' }}>
+                      <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Stack direction="row" alignItems="center" spacing={0.75}>
+                          <Avatar sx={{ width: 20, height: 20, fontSize: '0.6rem', bgcolor: 'primary.light' }}>
                             {post.users?.nickname?.[0]}
                           </Avatar>
-                          <Typography variant="caption" color="text.secondary" noWrap sx={{ fontSize: { xs: '0.6rem', sm: '0.7rem' }, maxWidth: { xs: 50, sm: 80 } }}>
+                          <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: 100 }}>
                             {post.users?.nickname}
                           </Typography>
                         </Stack>
-                        <Typography variant="caption" color="text.disabled" sx={{ fontSize: { xs: '0.6rem', sm: '0.7rem' } }}>
+                        <Typography variant="caption" color="text.disabled">
                           {formatDistanceToNow(post.created_at)}
                         </Typography>
                       </Stack>
 
-                      <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
-                        <Stack direction="row" alignItems="center" spacing={0.25}>
-                          <FavoriteIcon sx={{ fontSize: 10, color: 'primary.main' }} />
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
+                      <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+                        <Stack direction="row" alignItems="center" spacing={0.5}>
+                          <FavoriteIcon sx={{ fontSize: 14, color: 'primary.main' }} />
+                          <Typography variant="body2" color="text.secondary">
                             {post.post_likes?.[0]?.count ?? 0}
                           </Typography>
                         </Stack>
-                        <Stack direction="row" alignItems="center" spacing={0.25}>
-                          <CommentIcon sx={{ fontSize: 10, color: 'text.disabled' }} />
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
+                        <Stack direction="row" alignItems="center" spacing={0.5}>
+                          <CommentIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
+                          <Typography variant="body2" color="text.secondary">
                             {post.comments?.[0]?.count ?? 0}
                           </Typography>
                         </Stack>
