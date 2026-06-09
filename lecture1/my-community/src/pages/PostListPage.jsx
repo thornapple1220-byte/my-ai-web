@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box, Container, Typography, Card,
+  Box, Container, Typography, Card, Button,
   CardMedia, CardContent, CardActionArea, Chip,
   Avatar, CircularProgress, AppBar, Toolbar,
   Fab, BottomNavigation, BottomNavigationAction,
@@ -96,30 +96,43 @@ function PostListPage() {
             </Typography>
           </Box>
 
-          {/* 데스크탑: 버튼 텍스트 표시 */}
+          {/* 데스크탑 */}
           {!isMobile && (
             <Stack direction="row" spacing={1} alignItems="center">
-              <Chip
-                label={`${userProfile?.nickname || '카페러버'}님`}
-                avatar={<Avatar sx={{ bgcolor: 'primary.light' }}><PersonIcon sx={{ fontSize: 14 }} /></Avatar>}
+              <Button
+                variant="outlined"
                 size="small"
-                sx={{ fontWeight: 600 }}
-              />
-              <Fab
+                startIcon={<PersonIcon />}
+                sx={{
+                  borderRadius: 20, height: 36, fontWeight: 600,
+                  borderColor: 'divider', color: 'text.primary',
+                  '&:hover': { borderColor: 'primary.main', color: 'primary.main', bgcolor: 'transparent' },
+                }}
+              >
+                {userProfile?.nickname || '카페러버'}님
+              </Button>
+              <Button
+                variant="contained"
                 size="small"
-                color="primary"
+                startIcon={<AddIcon />}
                 onClick={() => navigate('/posts/new')}
-                sx={{ boxShadow: 2, width: 36, height: 36, minHeight: 36 }}
+                sx={{ borderRadius: 20, height: 36, fontWeight: 600, boxShadow: 'none' }}
               >
-                <AddIcon fontSize="small" />
-              </Fab>
-              <Fab
+                게시물 추가
+              </Button>
+              <Button
+                variant="outlined"
                 size="small"
+                startIcon={<LogoutIcon />}
                 onClick={handleLogout}
-                sx={{ boxShadow: 1, width: 36, height: 36, minHeight: 36, bgcolor: 'grey.100', color: 'text.secondary' }}
+                sx={{
+                  borderRadius: 20, height: 36, fontWeight: 600,
+                  borderColor: 'divider', color: 'text.secondary',
+                  '&:hover': { borderColor: 'error.main', color: 'error.main', bgcolor: 'transparent' },
+                }}
               >
-                <LogoutIcon fontSize="small" />
-              </Fab>
+                로그아웃
+              </Button>
             </Stack>
           )}
         </Toolbar>
