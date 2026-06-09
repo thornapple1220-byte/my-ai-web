@@ -126,28 +126,39 @@ function PostDetailPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: { xs: 10, sm: 4 } }}>
+      {/* 모바일 전용 AppBar */}
       <AppBar
         position="sticky"
         elevation={0}
-        sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider' }}
+        sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider', display: { xs: 'block', sm: 'none' } }}
       >
-        <Toolbar sx={{ minHeight: { xs: 56, sm: 64 } }}>
+        <Toolbar sx={{ minHeight: 56 }}>
           <IconButton onClick={() => navigate(-1)} edge="start" size="small">
             <ArrowBackIcon />
           </IconButton>
-          <Typography
-            fontWeight={700}
-            color="primary.main"
-            sx={{ flexGrow: 1, ml: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}
-          >
+          <Typography fontWeight={700} color="primary.main" sx={{ flexGrow: 1, ml: 1, fontSize: '1rem' }}>
             카페 리뷰
           </Typography>
         </Toolbar>
       </AppBar>
 
       <Container maxWidth="sm" sx={{ px: { xs: 0, sm: 3 } }}>
+        {/* 데스크탑 전용 뒤로가기 버튼 (프로필 바로 위) */}
+        <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', pt: 2.5, pb: 0.5 }}>
+          <IconButton onClick={() => navigate(-1)} size="small" sx={{ mr: 0.5, color: 'text.secondary' }}>
+            <ArrowBackIcon fontSize="small" />
+          </IconButton>
+          <Typography
+            variant="body2"
+            onClick={() => navigate(-1)}
+            sx={{ cursor: 'pointer', color: 'text.secondary', fontWeight: 500, '&:hover': { color: 'primary.main' } }}
+          >
+            뒤로가기
+          </Typography>
+        </Box>
+
         {/* 작성자 프로필 */}
-        <Box sx={{ display: 'flex', alignItems: 'center', px: { xs: 2, sm: 0 }, py: { xs: 1.5, sm: 2 }, gap: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', px: { xs: 2, sm: 0 }, py: { xs: 1.5, sm: 1 }, gap: 1.5 }}>
           <Avatar sx={{ width: { xs: 36, sm: 40 }, height: { xs: 36, sm: 40 }, bgcolor: 'primary.light', fontWeight: 700 }}>
             {post.users?.nickname?.[0]}
           </Avatar>
