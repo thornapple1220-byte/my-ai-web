@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box, Container, Typography, IconButton, Avatar, Stack,
-  Chip, TextField, Button, Divider, CircularProgress,
-  AppBar, Toolbar, Rating,
+  Chip, TextField, Divider, CircularProgress,
+  AppBar, Toolbar, Rating, Paper,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -75,11 +75,8 @@ function PostDetailPage() {
 
     if (user) {
       const { data } = await supabase
-        .from('post_likes')
-        .select('id')
-        .eq('post_id', id)
-        .eq('user_id', user.id)
-        .maybeSingle();
+        .from('post_likes').select('id')
+        .eq('post_id', id).eq('user_id', user.id).maybeSingle();
       setLiked(!!data);
     }
   };
@@ -128,22 +125,30 @@ function PostDetailPage() {
   if (!post) return null;
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <AppBar position="sticky" elevation={0} sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider' }}>
-        <Toolbar>
-          <IconButton onClick={() => navigate(-1)} edge="start">
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: { xs: 10, sm: 4 } }}>
+      <AppBar
+        position="sticky"
+        elevation={0}
+        sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider' }}
+      >
+        <Toolbar sx={{ minHeight: { xs: 56, sm: 64 } }}>
+          <IconButton onClick={() => navigate(-1)} edge="start" size="small">
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h6" fontWeight={700} color="primary.main" sx={{ flexGrow: 1, ml: 1 }}>
+          <Typography
+            fontWeight={700}
+            color="primary.main"
+            sx={{ flexGrow: 1, ml: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}
+          >
             카페 리뷰
           </Typography>
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="sm" sx={{ pb: 6 }}>
+      <Container maxWidth="sm" sx={{ px: { xs: 0, sm: 3 } }}>
         {/* 작성자 프로필 */}
-        <Box sx={{ display: 'flex', alignItems: 'center', py: 2, gap: 1.5 }}>
-          <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.light', fontWeight: 700 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', px: { xs: 2, sm: 0 }, py: { xs: 1.5, sm: 2 }, gap: 1.5 }}>
+          <Avatar sx={{ width: { xs: 36, sm: 40 }, height: { xs: 36, sm: 40 }, bgcolor: 'primary.light', fontWeight: 700 }}>
             {post.users?.nickname?.[0]}
           </Avatar>
           <Box sx={{ flexGrow: 1 }}>
@@ -155,8 +160,8 @@ function PostDetailPage() {
           <Typography variant="caption" color="text.disabled">{formatDistanceToNow(post.created_at)}</Typography>
         </Box>
 
-        {/* 메인 미디어 (정사각형) */}
-        <Box sx={{ width: '100%', paddingTop: '100%', position: 'relative', bgcolor: 'grey.100', borderRadius: 3, overflow: 'hidden' }}>
+        {/* 메인 미디어 */}
+        <Box sx={{ width: '100%', paddingTop: '100%', position: 'relative', bgcolor: 'grey.100', overflow: 'hidden' }}>
           {post.image_url ? (
             <Box
               component="img"
@@ -172,17 +177,22 @@ function PostDetailPage() {
               sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : (
-            <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-              bgcolor: 'secondary.light', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography color="primary.main" fontWeight={700}>☕</Typography>
+            <Box sx={{
+              position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+              bgcolor: 'secondary.light', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Typography sx={{ fontSize: 48 }}>☕</Typography>
             </Box>
           )}
         </Box>
 
         {/* 좋아요 / 별점 */}
-        <Box sx={{ py: 1.5 }}>
+        <Box sx={{ px: { xs: 2, sm: 0 }, py: 1.5 }}>
           <Stack direction="row" alignItems="center" spacing={1}>
-            <IconButton onClick={handleLike} sx={{ color: liked ? 'primary.main' : 'text.disabled', p: 0.5 }}>
+            <IconButton
+              onClick={handleLike}
+              sx={{ color: liked ? 'primary.main' : 'text.disabled', p: { xs: 0.75, sm: 0.5 } }}
+            >
               {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
             </IconButton>
             <Typography variant="body2" fontWeight={600}>{likeCount}</Typography>
@@ -190,20 +200,20 @@ function PostDetailPage() {
             {post.rating && <Rating value={post.rating} readOnly size="small" sx={{ color: 'primary.main' }} />}
           </Stack>
 
-          {/* 제목 / 내용 */}
-          <Typography variant="body1" fontWeight={700} sx={{ mt: 1 }}>{post.title}</Typography>
+          <Typography variant="body1" fontWeight={700} sx={{ mt: 1, fontSize: { xs: '0.95rem', sm: '1rem' } }}>
+            {post.title}
+          </Typography>
           {post.content && (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, whiteSpace: 'pre-wrap' }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, whiteSpace: 'pre-wrap', fontSize: { xs: '0.85rem', sm: '0.875rem' } }}>
               {post.content}
             </Typography>
           )}
 
-          {/* 태그 */}
           {post.tags?.length > 0 && (
             <Stack direction="row" flexWrap="wrap" gap={0.5} sx={{ mt: 1 }}>
               {post.tags.map((tag) => (
                 <Chip key={tag} label={`#${tag}`} size="small" variant="outlined" color="primary"
-                  sx={{ borderRadius: 20, fontSize: '0.7rem' }} />
+                  sx={{ borderRadius: 20, fontSize: '0.65rem', height: 22 }} />
               ))}
             </Stack>
           )}
@@ -216,7 +226,7 @@ function PostDetailPage() {
         <Divider />
 
         {/* 댓글 목록 */}
-        <Box sx={{ py: 2 }}>
+        <Box sx={{ px: { xs: 2, sm: 0 }, py: 2 }}>
           <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 2 }}>
             댓글 {comments.length}개
           </Typography>
@@ -228,64 +238,85 @@ function PostDetailPage() {
           ) : (
             <Stack spacing={2}>
               {comments.map((comment) => (
-                <Box key={comment.id}>
-                  <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                    <Avatar sx={{ width: 32, height: 32, fontSize: '0.8rem', bgcolor: 'secondary.main', color: 'primary.dark' }}>
-                      {comment.users?.nickname?.[0]}
-                    </Avatar>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <Typography variant="caption" fontWeight={700}>{comment.users?.nickname}</Typography>
-                        <Typography variant="caption" color="text.disabled">{formatDistanceToNow(comment.created_at)}</Typography>
-                      </Stack>
-                      <Typography variant="body2" sx={{ mt: 0.25 }}>{comment.content}</Typography>
-                    </Box>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleCommentLike(comment.id)}
-                      sx={{ color: commentLikes[comment.id] ? 'primary.main' : 'text.disabled', p: 0.5 }}
-                    >
-                      {commentLikes[comment.id] ? <FavoriteIcon sx={{ fontSize: 14 }} /> : <FavoriteBorderIcon sx={{ fontSize: 14 }} />}
-                    </IconButton>
-                  </Stack>
-                </Box>
+                <Stack key={comment.id} direction="row" spacing={1.5} alignItems="flex-start">
+                  <Avatar sx={{ width: 30, height: 30, fontSize: '0.75rem', bgcolor: 'secondary.main', color: 'primary.dark', flexShrink: 0 }}>
+                    {comment.users?.nickname?.[0]}
+                  </Avatar>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Typography variant="caption" fontWeight={700}>{comment.users?.nickname}</Typography>
+                      <Typography variant="caption" color="text.disabled">{formatDistanceToNow(comment.created_at)}</Typography>
+                    </Stack>
+                    <Typography variant="body2" sx={{ mt: 0.25, fontSize: { xs: '0.85rem', sm: '0.875rem' } }}>
+                      {comment.content}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    size="small"
+                    onClick={() => handleCommentLike(comment.id)}
+                    sx={{ color: commentLikes[comment.id] ? 'primary.main' : 'text.disabled', p: 0.5, flexShrink: 0 }}
+                  >
+                    {commentLikes[comment.id]
+                      ? <FavoriteIcon sx={{ fontSize: 14 }} />
+                      : <FavoriteBorderIcon sx={{ fontSize: 14 }} />}
+                  </IconButton>
+                </Stack>
               ))}
             </Stack>
           )}
         </Box>
-
-        <Divider />
-
-        {/* 댓글 작성 */}
-        <Box sx={{ pt: 2 }}>
-          <Stack direction="row" spacing={1} alignItems="flex-end">
-            <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.light', fontSize: '0.8rem' }}>
-              {user?.user_metadata?.nickname?.[0]}
-            </Avatar>
-            <TextField
-              variant="outlined"
-              placeholder="댓글 달기..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleCommentSubmit(); } }}
-              multiline
-              maxRows={4}
-              fullWidth
-              size="small"
-              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
-            />
-            <IconButton
-              color="primary"
-              onClick={handleCommentSubmit}
-              disabled={submitting || !newComment.trim()}
-              sx={{ bgcolor: 'primary.main', color: 'white', '&:hover': { bgcolor: 'primary.dark' },
-                '&.Mui-disabled': { bgcolor: 'grey.200' } }}
-            >
-              {submitting ? <CircularProgress size={20} color="inherit" /> : <SendIcon fontSize="small" />}
-            </IconButton>
-          </Stack>
-        </Box>
       </Container>
+
+      {/* 댓글 입력: 모바일=하단 고정, 데스크탑=인라인 */}
+      <Paper
+        elevation={4}
+        sx={{
+          position: { xs: 'fixed', sm: 'static' },
+          bottom: { xs: 0, sm: 'auto' },
+          left: { xs: 0, sm: 'auto' },
+          right: { xs: 0, sm: 'auto' },
+          zIndex: { xs: 99, sm: 'auto' },
+          px: { xs: 2, sm: 0 },
+          py: 1.5,
+          boxShadow: { xs: '0 -2px 12px rgba(0,0,0,0.08)', sm: 'none' },
+          bgcolor: 'background.paper',
+          borderTop: { xs: '1px solid', sm: 'none' },
+          borderColor: 'divider',
+          maxWidth: { sm: 600 },
+          mx: { sm: 'auto' },
+        }}
+      >
+        <Stack direction="row" spacing={1} alignItems="flex-end">
+          <Avatar sx={{ width: 30, height: 30, bgcolor: 'primary.light', fontSize: '0.75rem', flexShrink: 0 }}>
+            {user?.user_metadata?.nickname?.[0] || '?'}
+          </Avatar>
+          <TextField
+            variant="outlined"
+            placeholder="댓글 달기..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleCommentSubmit(); } }}
+            multiline
+            maxRows={3}
+            fullWidth
+            size="small"
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3, fontSize: { xs: '0.875rem', sm: '1rem' } } }}
+          />
+          <IconButton
+            color="primary"
+            onClick={handleCommentSubmit}
+            disabled={submitting || !newComment.trim()}
+            sx={{
+              bgcolor: 'primary.main', color: 'white', flexShrink: 0,
+              width: 36, height: 36,
+              '&:hover': { bgcolor: 'primary.dark' },
+              '&.Mui-disabled': { bgcolor: 'grey.200' },
+            }}
+          >
+            {submitting ? <CircularProgress size={18} color="inherit" /> : <SendIcon sx={{ fontSize: 18 }} />}
+          </IconButton>
+        </Stack>
+      </Paper>
     </Box>
   );
 }

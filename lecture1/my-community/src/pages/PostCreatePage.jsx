@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Box, Container, Typography, TextField, Button, Stack,
   IconButton, Rating, Chip, Alert, AppBar, Toolbar,
-  CircularProgress, Grid,
+  CircularProgress, Grid, useMediaQuery, useTheme,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -19,6 +19,8 @@ const TAG_OPTIONS = ['커피가 맛있는', '디저트가 맛있는', '반려견
 function PostCreatePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const fileInputRef = useRef(null);
   const videoInputRef = useRef(null);
 
@@ -57,8 +59,7 @@ function PostCreatePage() {
     setRandomLoading(true);
     try {
       const randomId = Math.floor(Math.random() * 1000);
-      const url = `https://picsum.photos/seed/${randomId}/600/600`;
-      setImagePreview(url);
+      setImagePreview(`https://picsum.photos/seed/${randomId}/600/600`);
       setImageFile(null);
       setVideoPreview(null);
       setVideoFile(null);
@@ -68,13 +69,11 @@ function PostCreatePage() {
   };
 
   const handleTagToggle = (tag) => {
-    setTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
+    setTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     if (!title) { setError('제목을 입력해주세요.'); return; }
     if (!rating) { setError('별점을 선택해주세요.'); return; }
 
@@ -88,36 +87,25 @@ function PostCreatePage() {
       if (imageFile) {
         const ext = imageFile.name.split('.').pop();
         const fileName = `${user.id}/${Date.now()}.${ext}`;
-        const { error: uploadErr } = await supabase.storage
-          .from('post-media')
-          .upload(fileName, imageFile);
+        const { error: uploadErr } = await supabase.storage.from('post-media').upload(fileName, imageFile);
         if (uploadErr) throw uploadErr;
-        const { data } = supabase.storage.from('post-media').getPublicUrl(fileName);
-        imageUrl = data.publicUrl;
-      } else if (imagePreview && imagePreview.includes('picsum')) {
+        imageUrl = supabase.storage.from('post-media').getPublicUrl(fileName).data.publicUrl;
+      } else if (imagePreview?.includes('picsum')) {
         imageUrl = imagePreview;
       }
 
       if (videoFile) {
         const ext = videoFile.name.split('.').pop();
         const fileName = `${user.id}/videos/${Date.now()}.${ext}`;
-        const { error: uploadErr } = await supabase.storage
-          .from('post-media')
-          .upload(fileName, videoFile);
+        const { error: uploadErr } = await supabase.storage.from('post-media').upload(fileName, videoFile);
         if (uploadErr) throw uploadErr;
-        const { data } = supabase.storage.from('post-media').getPublicUrl(fileName);
-        videoUrl = data.publicUrl;
+        videoUrl = supabase.storage.from('post-media').getPublicUrl(fileName).data.publicUrl;
       }
 
       const { error: insertErr } = await supabase.from('posts').insert({
-        title,
-        content,
-        user_id: user.id,
-        image_url: imageUrl,
-        video_url: videoUrl,
-        rating,
-        region: region || null,
-        tags,
+        title, content, user_id: user.id,
+        image_url: imageUrl, video_url: videoUrl,
+        rating, region: region || null, tags,
       });
 
       if (insertErr) throw insertErr;
@@ -131,35 +119,48 @@ function PostCreatePage() {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <AppBar position="sticky" elevation={0} sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider' }}>
-        <Toolbar>
+      <AppBar
+        position="sticky"
+        elevation={0}
+        sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider' }}
+      >
+        <Toolbar sx={{ minHeight: { xs: 56, sm: 64 } }}>
           <IconButton onClick={() => navigate(-1)} edge="start" sx={{ mr: 1 }}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h6" fontWeight={700} color="primary.main" sx={{ flexGrow: 1 }}>
+          <Typography
+            fontWeight={700}
+            color="primary.main"
+            sx={{ flexGrow: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}
+          >
             카페 리뷰 작성
           </Typography>
-          <Button variant="contained" onClick={handleSubmit} disabled={loading} sx={{ borderRadius: 20 }}>
-            {loading ? <CircularProgress size={20} color="inherit" /> : '등록'}
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={loading}
+            size={isMobile ? 'small' : 'medium'}
+            sx={{ borderRadius: 20, minWidth: 56 }}
+          >
+            {loading ? <CircularProgress size={18} color="inherit" /> : '등록'}
           </Button>
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="sm" sx={{ py: 3 }}>
+      <Container maxWidth="sm" sx={{ py: { xs: 2, sm: 3 }, px: { xs: 1.5, sm: 3 } }}>
         {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>{error}</Alert>}
 
-        <Stack spacing={3}>
-          {/* 미디어 업로드 영역 */}
+        <Stack spacing={{ xs: 2.5, sm: 3 }}>
+          {/* 미디어 업로드 */}
           <Box>
             <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
               사진 / 동영상
             </Typography>
 
-            {/* 미디어 프리뷰 */}
             <Box
               sx={{
                 width: '100%',
-                paddingTop: '100%',
+                paddingTop: '75%',
                 position: 'relative',
                 bgcolor: 'grey.100',
                 borderRadius: 3,
@@ -182,9 +183,12 @@ function PostCreatePage() {
                   sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               ) : (
-                <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                  <AddPhotoAlternateIcon sx={{ fontSize: 48, color: 'text.disabled', mb: 1 }} />
+                <Box sx={{
+                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  gap: 1,
+                }}>
+                  <AddPhotoAlternateIcon sx={{ fontSize: { xs: 36, sm: 48 }, color: 'text.disabled' }} />
                   <Typography variant="caption" color="text.disabled">사진 또는 동영상을 추가하세요</Typography>
                 </Box>
               )}
@@ -192,33 +196,38 @@ function PostCreatePage() {
                 <IconButton
                   size="small"
                   onClick={() => { setImagePreview(null); setImageFile(null); setVideoPreview(null); setVideoFile(null); }}
-                  sx={{ position: 'absolute', top: 8, right: 8, bgcolor: 'rgba(0,0,0,0.5)', color: 'white',
-                    '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' } }}
+                  sx={{
+                    position: 'absolute', top: 8, right: 8,
+                    bgcolor: 'rgba(0,0,0,0.5)', color: 'white',
+                    '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' },
+                  }}
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>
               )}
             </Box>
 
-            {/* 업로드 버튼들 */}
-            <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+            {/* 업로드 버튼: 모바일=세로, 데스크탑=가로 */}
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={1}
+              sx={{ mt: 1.5 }}
+            >
               <Button
                 variant="outlined"
                 startIcon={<AddPhotoAlternateIcon />}
                 onClick={() => fileInputRef.current?.click()}
-                size="small"
                 fullWidth
-                sx={{ borderRadius: 2 }}
+                sx={{ borderRadius: 2, py: { xs: 1.2, sm: 0.8 } }}
               >
-                앨범에서 선택
+                앨범에서 사진 선택
               </Button>
               <Button
                 variant="outlined"
                 startIcon={<VideoCallIcon />}
                 onClick={() => videoInputRef.current?.click()}
-                size="small"
                 fullWidth
-                sx={{ borderRadius: 2 }}
+                sx={{ borderRadius: 2, py: { xs: 1.2, sm: 0.8 } }}
               >
                 동영상 선택
               </Button>
@@ -228,9 +237,8 @@ function PostCreatePage() {
                 startIcon={randomLoading ? <CircularProgress size={14} /> : <ShuffleIcon />}
                 onClick={handleRandomImage}
                 disabled={randomLoading}
-                size="small"
                 fullWidth
-                sx={{ borderRadius: 2, color: 'primary.dark' }}
+                sx={{ borderRadius: 2, color: 'primary.dark', py: { xs: 1.2, sm: 0.8 } }}
               >
                 랜덤 이미지
               </Button>
@@ -256,7 +264,7 @@ function PostCreatePage() {
             variant="outlined"
             fullWidth
             multiline
-            rows={4}
+            rows={isMobile ? 3 : 4}
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="카페에 대한 솔직한 리뷰를 남겨주세요 ☕"
@@ -271,49 +279,49 @@ function PostCreatePage() {
             <Rating
               value={rating}
               onChange={(_, v) => setRating(v)}
-              size="large"
+              size={isMobile ? 'medium' : 'large'}
               sx={{ color: 'primary.main' }}
             />
           </Box>
 
-          {/* 지역 선택 */}
+          {/* 지역 */}
           <Box>
             <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
               지역
             </Typography>
-            <Grid container spacing={1}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {REGION_OPTIONS.map((r) => (
-                <Grid item key={r}>
-                  <Chip
-                    label={r}
-                    onClick={() => setRegion(region === r ? '' : r)}
-                    color={region === r ? 'primary' : 'default'}
-                    variant={region === r ? 'filled' : 'outlined'}
-                    sx={{ borderRadius: 20, cursor: 'pointer' }}
-                  />
-                </Grid>
+                <Chip
+                  key={r}
+                  label={r}
+                  onClick={() => setRegion(region === r ? '' : r)}
+                  color={region === r ? 'primary' : 'default'}
+                  variant={region === r ? 'filled' : 'outlined'}
+                  size={isMobile ? 'small' : 'medium'}
+                  sx={{ borderRadius: 20, cursor: 'pointer' }}
+                />
               ))}
-            </Grid>
+            </Box>
           </Box>
 
-          {/* 태그 선택 */}
+          {/* 태그 */}
           <Box>
             <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
-              태그 (복수 선택 가능)
+              태그 (복수 선택)
             </Typography>
-            <Grid container spacing={1}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {TAG_OPTIONS.map((tag) => (
-                <Grid item key={tag}>
-                  <Chip
-                    label={tag}
-                    onClick={() => handleTagToggle(tag)}
-                    color={tags.includes(tag) ? 'primary' : 'default'}
-                    variant={tags.includes(tag) ? 'filled' : 'outlined'}
-                    sx={{ borderRadius: 20, cursor: 'pointer' }}
-                  />
-                </Grid>
+                <Chip
+                  key={tag}
+                  label={tag}
+                  onClick={() => handleTagToggle(tag)}
+                  color={tags.includes(tag) ? 'primary' : 'default'}
+                  variant={tags.includes(tag) ? 'filled' : 'outlined'}
+                  size={isMobile ? 'small' : 'medium'}
+                  sx={{ borderRadius: 20, cursor: 'pointer' }}
+                />
               ))}
-            </Grid>
+            </Box>
           </Box>
 
           <Button
@@ -321,7 +329,7 @@ function PostCreatePage() {
             size="large"
             onClick={handleSubmit}
             disabled={loading}
-            sx={{ py: 1.5, borderRadius: 3, fontSize: '1rem' }}
+            sx={{ py: { xs: 1.5, sm: 1.8 }, borderRadius: 3, fontSize: { xs: '0.95rem', sm: '1rem' } }}
           >
             {loading ? <CircularProgress size={24} color="inherit" /> : '게시물 등록'}
           </Button>
