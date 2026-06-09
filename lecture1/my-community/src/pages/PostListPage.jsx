@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box, Container, Typography, Grid, Card,
+  Box, Container, Typography, Card,
   CardMedia, CardContent, CardActionArea, Chip,
   Avatar, CircularProgress, AppBar, Toolbar,
   Fab, BottomNavigation, BottomNavigationAction,
@@ -204,99 +204,103 @@ function PostListPage() {
             </Typography>
           </Box>
         ) : (
-          <Grid container spacing={{ xs: 2, sm: 2.5 }}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: 'repeat(2, minmax(180px, 1fr))',
+                md: 'repeat(4, minmax(180px, 1fr))',
+              },
+              gap: { xs: '12px', sm: '16px' },
+            }}
+          >
             {posts.map((post) => (
-              <Grid item xs={12} sm={4} md={4} key={post.id}>
-                <Card
-                  elevation={0}
-                  sx={{
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    borderRadius: 3,
-                    overflow: 'hidden',
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: '0 8px 28px rgba(233,30,140,0.18)',
-                    },
-                  }}
-                >
-                  <CardActionArea onClick={() => navigate(`/posts/${post.id}`)}>
-                    {/* 정사각형 썸네일 */}
-                    <Box sx={{ position: 'relative', paddingTop: '100%' }}>
-                      {post.image_url ? (
-                        <CardMedia
-                          component="img"
-                          image={post.image_url}
-                          alt={post.title}
-                          sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                      ) : post.video_url ? (
-                        <Box
-                          component="video"
-                          src={post.video_url}
-                          sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                      ) : (
-                        <Box sx={{
-                          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                          bgcolor: 'secondary.light', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        }}>
-                          <LocalCafeIcon sx={{ fontSize: 64, color: 'primary.main', opacity: 0.35 }} />
-                        </Box>
-                      )}
-                      {post.rating && (
-                        <Chip
-                          label={`⭐ ${post.rating}`}
-                          size="small"
-                          sx={{
-                            position: 'absolute', top: 10, right: 10,
-                            bgcolor: 'rgba(255,255,255,0.93)',
-                            fontSize: '0.75rem', height: 24, fontWeight: 700,
-                          }}
-                        />
-                      )}
-                    </Box>
+              <Card
+                key={post.id}
+                elevation={0}
+                sx={{
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 8px 28px rgba(233,30,140,0.18)',
+                  },
+                }}
+              >
+                <CardActionArea onClick={() => navigate(`/posts/${post.id}`)}>
+                  {/* 정사각형 썸네일 */}
+                  <Box sx={{ position: 'relative', paddingTop: '100%' }}>
+                    {post.image_url ? (
+                      <CardMedia
+                        component="img"
+                        image={post.image_url}
+                        alt={post.title}
+                        sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : post.video_url ? (
+                      <Box
+                        component="video"
+                        src={post.video_url}
+                        sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <Box sx={{
+                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                        bgcolor: 'secondary.light', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <LocalCafeIcon sx={{ fontSize: 56, color: 'primary.main', opacity: 0.35 }} />
+                      </Box>
+                    )}
+                    {post.rating && (
+                      <Chip
+                        label={`⭐ ${post.rating}`}
+                        size="small"
+                        sx={{
+                          position: 'absolute', top: 8, right: 8,
+                          bgcolor: 'rgba(255,255,255,0.93)',
+                          fontSize: '0.72rem', height: 22, fontWeight: 700,
+                        }}
+                      />
+                    )}
+                  </Box>
 
-                    <CardContent sx={{ p: 2 }}>
-                      <Typography fontWeight={700} noWrap sx={{ fontSize: '0.95rem', mb: 0.5 }}>
-                        {post.title}
-                      </Typography>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+                    <Typography fontWeight={700} noWrap sx={{ fontSize: { xs: '0.82rem', sm: '0.95rem' }, mb: 0.5 }}>
+                      {post.title}
+                    </Typography>
 
-                      <Stack direction="row" alignItems="center" justifyContent="space-between">
-                        <Stack direction="row" alignItems="center" spacing={0.75}>
-                          <Avatar sx={{ width: 20, height: 20, fontSize: '0.6rem', bgcolor: 'primary.light' }}>
-                            {post.users?.nickname?.[0]}
-                          </Avatar>
-                          <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: 100 }}>
-                            {post.users?.nickname}
-                          </Typography>
-                        </Stack>
-                        <Typography variant="caption" color="text.disabled">
-                          {formatDistanceToNow(post.created_at)}
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                      <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <Avatar sx={{ width: 18, height: 18, fontSize: '0.55rem', bgcolor: 'primary.light' }}>
+                          {post.users?.nickname?.[0]}
+                        </Avatar>
+                        <Typography variant="caption" color="text.secondary" noWrap sx={{ maxWidth: { xs: 60, sm: 90 } }}>
+                          {post.users?.nickname}
                         </Typography>
                       </Stack>
+                      <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.65rem' }}>
+                        {formatDistanceToNow(post.created_at)}
+                      </Typography>
+                    </Stack>
 
-                      <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                        <Stack direction="row" alignItems="center" spacing={0.5}>
-                          <FavoriteIcon sx={{ fontSize: 14, color: 'primary.main' }} />
-                          <Typography variant="body2" color="text.secondary">
-                            {post.post_likes?.[0]?.count ?? 0}
-                          </Typography>
-                        </Stack>
-                        <Stack direction="row" alignItems="center" spacing={0.5}>
-                          <CommentIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
-                          <Typography variant="body2" color="text.secondary">
-                            {post.comments?.[0]?.count ?? 0}
-                          </Typography>
-                        </Stack>
+                    <Stack direction="row" spacing={1.5} sx={{ mt: 0.75 }}>
+                      <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <FavoriteIcon sx={{ fontSize: 13, color: 'primary.main' }} />
+                        <Typography variant="caption" color="text.secondary">{post.post_likes?.[0]?.count ?? 0}</Typography>
                       </Stack>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
+                      <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <CommentIcon sx={{ fontSize: 13, color: 'text.disabled' }} />
+                        <Typography variant="caption" color="text.secondary">{post.comments?.[0]?.count ?? 0}</Typography>
+                      </Stack>
+                    </Stack>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
             ))}
-          </Grid>
+          </Box>
         )}
       </Container>
 
