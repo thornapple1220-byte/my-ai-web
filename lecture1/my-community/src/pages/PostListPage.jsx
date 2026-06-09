@@ -79,18 +79,22 @@ function PostListPage() {
         sx={{ bgcolor: 'background.paper', borderBottom: '1px solid', borderColor: 'divider' }}
       >
         <Toolbar sx={{ minHeight: { xs: 56, sm: 64 } }}>
-          <LocalCafeIcon sx={{ color: 'primary.main', mr: { xs: 0.5, sm: 1 }, fontSize: { xs: 22, sm: 26 } }} />
-          <Typography
-            fontWeight={800}
-            sx={{
-              flexGrow: 1,
-              color: 'primary.main',
-              letterSpacing: '-0.5px',
-              fontSize: { xs: '1rem', sm: '1.25rem' },
-            }}
+          <Box
+            onClick={() => navigate('/')}
+            sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', flexGrow: 1 }}
           >
-            AWESOME CAFÉ
-          </Typography>
+            <LocalCafeIcon sx={{ color: 'primary.main', mr: { xs: 0.5, sm: 1 }, fontSize: { xs: 22, sm: 26 } }} />
+            <Typography
+              fontWeight={800}
+              sx={{
+                color: 'primary.main',
+                letterSpacing: '-0.5px',
+                fontSize: { xs: '1rem', sm: '1.25rem' },
+              }}
+            >
+              AWESOME CAFÉ
+            </Typography>
+          </Box>
 
           {/* 데스크탑: 버튼 텍스트 표시 */}
           {!isMobile && (
@@ -272,19 +276,17 @@ function PostListPage() {
                       {post.title}
                     </Typography>
 
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                      <Stack direction="row" alignItems="center" spacing={0.5}>
-                        <Avatar sx={{ width: 18, height: 18, fontSize: '0.55rem', bgcolor: 'primary.light' }}>
-                          {post.users?.nickname?.[0]}
-                        </Avatar>
-                        <Typography variant="caption" color="text.secondary" noWrap sx={{ maxWidth: { xs: 60, sm: 90 } }}>
-                          {post.users?.nickname}
-                        </Typography>
-                      </Stack>
-                      <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.65rem' }}>
-                        {formatDistanceToNow(post.created_at)}
+                    <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
+                      <Avatar sx={{ width: 18, height: 18, fontSize: '0.55rem', bgcolor: 'primary.light' }}>
+                        {post.users?.nickname?.[0]}
+                      </Avatar>
+                      <Typography variant="caption" color="text.secondary" noWrap sx={{ maxWidth: { xs: 80, sm: 110 } }}>
+                        {post.users?.nickname}
                       </Typography>
                     </Stack>
+                    <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.65rem', display: 'block', mb: 0.5 }}>
+                      {formatDistanceToNow(post.created_at)}
+                    </Typography>
 
                     <Stack direction="row" spacing={1.5} sx={{ mt: 0.75 }}>
                       <Stack direction="row" alignItems="center" spacing={0.5}>
