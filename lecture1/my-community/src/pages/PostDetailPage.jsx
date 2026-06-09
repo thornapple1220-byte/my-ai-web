@@ -188,16 +188,26 @@ function PostDetailPage() {
 
         {/* 좋아요 / 별점 */}
         <Box sx={{ px: { xs: 2, sm: 0 }, py: 1.5 }}>
-          <Stack direction="row" alignItems="center" spacing={1}>
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ minHeight: 36 }}>
             <IconButton
               onClick={handleLike}
-              sx={{ color: liked ? 'primary.main' : 'text.disabled', p: { xs: 0.75, sm: 0.5 } }}
+              size="small"
+              sx={{ color: liked ? 'primary.main' : 'text.disabled', p: 0.5 }}
             >
-              {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+              {liked
+                ? <FavoriteIcon sx={{ fontSize: 22 }} />
+                : <FavoriteBorderIcon sx={{ fontSize: 22 }} />}
             </IconButton>
-            <Typography variant="body2" fontWeight={600}>{likeCount}</Typography>
+            <Typography variant="body2" fontWeight={600} sx={{ lineHeight: 1 }}>{likeCount}</Typography>
             <Box sx={{ flexGrow: 1 }} />
-            {post.rating && <Rating value={post.rating} readOnly size="small" sx={{ color: 'primary.main' }} />}
+            {post.rating && (
+              <Rating
+                value={post.rating}
+                readOnly
+                size="small"
+                sx={{ color: 'primary.main', fontSize: '1.4rem' }}
+              />
+            )}
           </Stack>
 
           <Typography variant="body1" fontWeight={700} sx={{ mt: 1, fontSize: { xs: '0.95rem', sm: '1rem' } }}>
@@ -210,10 +220,21 @@ function PostDetailPage() {
           )}
 
           {post.tags?.length > 0 && (
-            <Stack direction="row" flexWrap="wrap" gap={0.5} sx={{ mt: 1 }}>
+            <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 1.5 }}>
               {post.tags.map((tag) => (
-                <Chip key={tag} label={`#${tag}`} size="small" variant="outlined" color="primary"
-                  sx={{ borderRadius: 20, fontSize: '0.65rem', height: 22 }} />
+                <Chip
+                  key={tag}
+                  label={`#${tag}`}
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    borderRadius: 20,
+                    fontSize: '0.7rem',
+                    height: 24,
+                    '& .MuiChip-label': { px: 1.5 },
+                  }}
+                />
               ))}
             </Stack>
           )}
@@ -269,7 +290,7 @@ function PostDetailPage() {
 
       {/* 댓글 입력: 모바일=하단 고정, 데스크탑=인라인 */}
       <Paper
-        elevation={4}
+        elevation={0}
         sx={{
           position: { xs: 'fixed', sm: 'static' },
           bottom: { xs: 0, sm: 'auto' },
@@ -278,8 +299,8 @@ function PostDetailPage() {
           zIndex: { xs: 99, sm: 'auto' },
           px: { xs: 2, sm: 0 },
           py: 1.5,
-          boxShadow: { xs: '0 -2px 12px rgba(0,0,0,0.08)', sm: 'none' },
-          bgcolor: 'background.paper',
+          boxShadow: 'none',
+          bgcolor: 'transparent',
           borderTop: { xs: '1px solid', sm: 'none' },
           borderColor: 'divider',
           maxWidth: { sm: 600 },
