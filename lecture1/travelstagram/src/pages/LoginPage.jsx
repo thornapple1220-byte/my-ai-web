@@ -16,12 +16,12 @@ function LoginPage() {
   const { login } = useApp();
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!username.trim() || !password) {
       setError('아이디와 비밀번호를 입력해주세요.');
       return;
     }
-    const result = login(username.trim(), password);
+    const result = await login(username.trim(), password);
     if (result.success) {
       navigate('/', { replace: true });
     } else {
