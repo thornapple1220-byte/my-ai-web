@@ -146,13 +146,6 @@ function LoginPage() {
           회원가입
         </Button>
 
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ mt: 2, display: 'block', textAlign: 'center' }}
-        >
-          테스트 계정: travel_lover / 1234
-        </Typography>
       </Box>
     </Box>
   );
