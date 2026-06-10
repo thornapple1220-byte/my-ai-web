@@ -15,7 +15,7 @@ function SignupPage() {
   const { signup } = useApp();
   const navigate = useNavigate();
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!username.trim() || !password || !nickname.trim()) {
       setError('모든 항목을 입력해주세요.');
       return;
@@ -28,7 +28,7 @@ function SignupPage() {
       setError('비밀번호는 4자 이상이어야 합니다.');
       return;
     }
-    const result = signup(username.trim(), password, nickname.trim());
+    const result = await signup(username.trim(), password, nickname.trim());
     if (result.success) {
       navigate('/', { replace: true });
     } else {
