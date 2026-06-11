@@ -19,7 +19,7 @@ function App() {
   const { user } = useApp();
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/my-ai-web">
       <Routes>
         {/* 비인증 페이지 */}
         <Route
