@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday 🎂</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { width: 100%; height: 100%; }
+
+    body {
+      background: #0a091a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    /* ── SCENE : 390 × 680 기준 (모바일 우선) ── */
+    .scene {
+      position: relative;
+      width: 390px;
+      height: 680px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* ── WALL & FLOOR ── */
+    .wall {
+      position: absolute;
+      inset: 0 0 130px 0;
+      background: #1e1a35;
+    }
+    .wall::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(90deg, transparent 0, transparent 59px,
+          rgba(255,255,255,0.025) 59px, rgba(255,255,255,0.025) 60px),
+        repeating-linear-gradient(180deg, transparent 0, transparent 59px,
+          rgba(255,255,255,0.025) 59px, rgba(255,255,255,0.025) 60px);
+    }
+    .floor {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 130px;
+      background: #16122a;
+      border-top: 4px solid #2d2650;
+    }
+    .floor::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(90deg, transparent 0, transparent 38px,
+          rgba(255,255,255,0.03) 38px, rgba(255,255,255,0.03) 39px);
+    }
+
+    /* ── STARS ── */
+    .star-field { position: absolute; inset: 0; pointer-events: none; }
+    .star {
+      position: absolute;
+      background: #fff;
+      animation: twinkle var(--d, 2s) ease-in-out infinite;
+      animation-delay: var(--dl, 0s);
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.08; }
+    }
+
+    /* ── WINDOW ── */
+    .window {
+      position: absolute;
+      top: 40px; left: 20px;
+      width: 100px; height: 120px;
+      background: #080f1c;
+      border: 7px solid #5a432a;
+      box-shadow: 0 0 20px rgba(80,60,160,0.2) inset;
+    }
+    .window-bar-h {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 7px; background: #5a432a;
+      transform: translateY(-50%);
+    }
+    .window-bar-v {
+      position: absolute;
+      top: 0; bottom: 0; left: 50%;
+      width: 7px; background: #5a432a;
+      transform: translateX(-50%);
+    }
+    .moon {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 26px; height: 26px;
+      background: #f5e97a;
+      border-radius: 50%;
+      box-shadow: 0 0 7px 2px rgba(245,233,122,0.55),
+                  0 0 16px 5px rgba(245,233,122,0.2);
+    }
+    .moon::before {
+      content: '';
+      position: absolute;
+      top: 6px; left: 4px;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(200,185,60,0.45);
+    }
+    .moon::after {
+      content: '';
+      position: absolute;
+      top: 13px; left: 13px;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(200,185,60,0.4);
+    }
+    .window-star {
+      position: absolute;
+      width: 3px; height: 3px;
+      background: #aac;
+    }
+
+    /* ── MUSIC NOTES ── */
+    .note {
+      position: absolute;
+      font-style: normal;
+      font-family: serif;
+      font-size: 16px;
+      color: rgba(180,140,240,0.55);
+      pointer-events: none;
+      animation: noteRise var(--nd, 5s) ease-in-out infinite;
+      animation-delay: var(--ndelay, 0s);
+    }
+    @keyframes noteRise {
+      0%   { transform: translateY(0) rotate(-10deg); opacity: 0; }
+      12%  { opacity: 0.8; }
+      85%  { opacity: 0.6; }
+      100% { transform: translateY(-70px) rotate(15deg); opacity: 0; }
+    }
+
+    /* ── HAPPY BIRTHDAY BANNER ── */
+    .banner {
+      position: absolute;
+      bottom: 278px; left: 0; right: 0;
+      text-align: center;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .banner-text {
+      display: inline-block;
+      font-size: 14px;
+      letter-spacing: 3px;
+      animation: colorWave 2.4s linear infinite;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.6);
+    }
+    .banner-sub {
+      display: inline-block;
+      font-family: 'Nanum Gothic', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 6px;
+      animation: colorWave 2.4s linear infinite;
+      animation-delay: 0.4s;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.6);
+    }
+    @keyframes colorWave {
+      0%   { color: #ff8fa3; }
+      17%  { color: #ffd166; }
+      34%  { color: #a8dadc; }
+      51%  { color: #c77dff; }
+      68%  { color: #ff9a8b; }
+      85%  { color: #b5ead7; }
+      100% { color: #ff8fa3; }
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      position: absolute;
+      bottom: 88px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .table-top {
+      position: relative;
+      width: 340px; height: 20px;
+      background: #9a7230;
+      border-top: 5px solid #c8a050;
+      border-left: 4px solid #b08a3a;
+      border-right: 4px solid #6a4c10;
+      border-bottom: 4px solid #6a4c10;
+    }
+    .table-leg {
+      position: absolute;
+      top: 100%;
+      width: 18px; height: 76px;
+      background: #8a6220;
+      border-left: 3px solid #b08a3a;
+      border-right: 3px solid #5a3e08;
+    }
+    .table-leg.left  { left: 28px; }
+    .table-leg.right { right: 28px; }
+    .table-items {
+      position: absolute;
+      bottom: 100%;
+      left: 0; right: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 28px;
+      padding-bottom: 5px;
+    }
+
+    /* ── CAKE (scale 0.5) ── */
+    .cake-scale-wrap {
+      position: relative;
+      width: 74px;   /* 148 * 0.5 */
+      height: 115px; /* 229 * 0.5 */
+      overflow: visible;
+      flex-shrink: 0;
+    }
+    .cake-pixel {
+      position: absolute;
+      bottom: 0; left: 50%;
+      margin-left: -74px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      image-rendering: pixelated;
+      transform: scale(0.5);
+      transform-origin: bottom center;
+    }
+
+    /* Candle area */
+    .candle-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 3;
+      margin-bottom: -4px;
+    }
+    .flame-svg {
+      display: block;
+      animation: flickerSvg 220ms ease-in-out infinite alternate;
+      transform-origin: center bottom;
+    }
+    @keyframes flickerSvg {
+      0%   { transform: scaleX(1)    skewX(0deg); }
+      30%  { transform: scaleX(0.88) skewX(4deg); }
+      60%  { transform: scaleX(1.08) skewX(-3deg); }
+      100% { transform: scaleX(0.94) skewX(1deg); }
+    }
+    .candle-body {
+      width: 14px; height: 48px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #ffffff 0px, #ffffff 4px,
+        #5bc8f5 4px, #5bc8f5 8px);
+      border-left: 2px solid #90caf9;
+      border-right: 2px solid #2196f3;
+      border-top: 2px solid #bbdefb;
+      border-bottom: 2px solid #1976d2;
+    }
+
+    /* Cake dome */
+    .cake-dome {
+      position: relative;
+      width: 148px; height: 76px;
+      border-radius: 74px 74px 8px 8px;
+      background: radial-gradient(ellipse at 38% 32%, #fce4ec 0%, #f48fb1 45%, #e91e8c 100%);
+      border: 4px solid #c2185b;
+      border-bottom-color: #ad1457;
+      overflow: hidden;
+    }
+    .cake-dome::before {
+      content: '';
+      position: absolute;
+      top: 10px; left: 22px;
+      width: 28px; height: 18px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 50%;
+      transform: rotate(-20deg);
+    }
+    .cake-dome::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: -4px; right: -4px;
+      height: 14px;
+      background: #f48fb1;
+      border-radius: 0 0 8px 8px;
+    }
+
+    /* Frosting drips */
+    .cake-drip-row {
+      position: relative;
+      width: 148px; height: 10px;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+    }
+    .drip {
+      width: 12px; height: 100%;
+      background: #f06292;
+      border-radius: 0 0 6px 6px;
+    }
+    .drip:nth-child(odd) { height: 70%; }
+
+    /* Cake body */
+    .cake-body {
+      position: relative;
+      width: 140px; height: 44px;
+      background: linear-gradient(180deg, #f5e5cf 0%, #e8d2b0 100%);
+      border-left: 4px solid #d4b888;
+      border-right: 4px solid #b8946a;
+    }
+    .cake-body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -4px;
+      width: 8px; height: 20px;
+      background: #f06292;
+      border-left: 4px solid #c2185b;
+    }
+    .cake-body::after {
+      content: '';
+      position: absolute;
+      top: 0; right: -4px;
+      width: 8px; height: 16px;
+      background: #f06292;
+      border-right: 4px solid #c2185b;
+    }
+    .cake-trim {
+      width: 148px; height: 6px;
+      background: #e91e8c;
+      border-left: 4px solid #c2185b;
+      border-right: 4px solid #880e4f;
+    }
+    .cake-base {
+      width: 148px; height: 14px;
+      background: #8d6e63;
+      border-left: 4px solid #a1887f;
+      border-right: 4px solid #5d4037;
+      border-bottom: 4px solid #4e342e;
+    }
+
+    /* ── CANDLE AMBIENT LIGHT ── */
+    /* cake-scale-wrap(74×115) 기준 — 촛불 상단 중앙에 고정 */
+    .ambient {
+      position: absolute;
+      left: 50%;
+      margin-left: -110px; /* 220px / 2 */
+      top: -90px;          /* 불꽃 위치(wrapper top ≈ 5px) - 100 + 15 보정 */
+      width: 220px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center,
+        rgba(255,165,40,0.18) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 1;
+      animation: ambPulse 1.8s ease-in-out infinite alternate;
+    }
+    @keyframes ambPulse {
+      from { opacity: 0.35; }
+      to   { opacity: 1;    }
+    }
+
+    /* ── CLOCK (monitor style, scale 0.65) ── */
+    .clock-scale-wrap {
+      position: relative;
+      width: 109px;  /* ~168px * 0.65 */
+      height: 92px;  /* ~142px * 0.65 */
+      overflow: visible;
+      flex-shrink: 0;
+    }
+    .clock-wrap {
+      position: absolute;
+      bottom: 0; left: 50%;
+      margin-left: -84px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: scale(0.65);
+      transform-origin: bottom center;
+    }
+    .mon-outer {
+      background: #2d2d2d;
+      border: 5px solid #8b7355;
+      padding: 5px;
+      image-rendering: pixelated;
+    }
+    .mon-screen {
+      background: #1a1a2e;
+      border: 2px solid #4a4a6a;
+      padding: 14px 18px;
+      text-align: center;
+      min-width: 148px;
+    }
+    .mon-label {
+      color: #a8d8ea;
+      font-size: 6px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .mon-time {
+      color: #ffd6e0;
+      font-size: 20px;
+      letter-spacing: 3px;
+      text-shadow: 0 0 10px #ffb3c6, 0 0 20px rgba(255,179,198,0.4);
+    }
+    .mon-date {
+      color: #b8f0c8;
+      font-size: 6px;
+      margin-top: 10px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 6px rgba(184,240,200,0.6);
+    }
+    .mon-stand {
+      background: #8b7355;
+      width: 30px; height: 9px;
+    }
+    .mon-base {
+      background: #6b5535;
+      width: 72px; height: 7px;
+      border-radius: 2px;
+    }
+
+    /* ── SPARKLES ── */
+    .sp {
+      position: absolute;
+      width: 4px; height: 4px;
+      background: #ffd700;
+      pointer-events: none;
+      animation: spFloat var(--sd, 1.5s) ease-out forwards;
+    }
+    @keyframes spFloat {
+      0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--sx, 0px), var(--sy, -50px)) scale(0); opacity: 0; }
+    }
+
+    /* ── PLAY BUTTON ── */
+    .btn-play {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a2e;
+      border: 3px solid #8b7355;
+      color: #ffd6e0;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 7px;
+      padding: 7px 16px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      z-index: 20;
+      white-space: nowrap;
+      outline: none;
+    }
+    .btn-play:hover { border-color: #c8a050; }
+    .btn-play.playing { border-color: #ffd6e0; color: #b8f0c8; }
+  </style>
+</head>
+<body>
+<div class="scene" id="scene">
+
+  <div class="wall"></div>
+  <div class="floor"></div>
+  <div class="star-field" id="starField"></div>
+
+  <!-- Window (left) -->
+  <div class="window">
+    <div class="window-bar-h"></div>
+    <div class="window-bar-v"></div>
+    <div class="moon"></div>
+    <div class="window-star" style="top:46px;left:8px;"></div>
+    <div class="window-star" style="top:64px;left:18px;width:2px;height:2px;"></div>
+    <div class="window-star" style="top:58px;left:40px;"></div>
+  </div>
+
+  <!-- Music notes (배너 주변) -->
+  <div class="note" style="left:72px; top:358px;--nd:4.5s;--ndelay:0s;">♪</div>
+  <div class="note" style="left:290px;top:355px;--nd:4.8s;--ndelay:1.2s;">♫</div>
+  <div class="note" style="left:118px;top:392px;--nd:5.2s;--ndelay:2.2s;">♩</div>
+  <div class="note" style="left:252px;top:388px;--nd:4.6s;--ndelay:0.6s;">♪</div>
+
+  <!-- Happy Birthday banner -->
+  <div class="banner">
+    <span class="banner-text">HAPPY BIRTHDAY</span>
+    <span class="banner-sub">아저씨</span>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap" id="tableWrap">
+    <div class="table-top">
+      <div class="table-leg left"></div>
+      <div class="table-leg right"></div>
+
+      <div class="table-items">
+
+        <!-- CAKE -->
+        <div class="cake-scale-wrap" id="cake">
+          <!-- 촛불 위치 기준 ambient glow (CSS 고정) -->
+          <div class="ambient"></div>
+          <div class="cake-pixel">
+            <div class="candle-area">
+              <svg class="flame-svg" xmlns="http://www.w3.org/2000/svg"
+                   width="30" height="35" viewBox="0 0 30 35"
+                   style="image-rendering:pixelated;overflow:visible;">
+                <rect x="10" y="0"  width="5" height="5" fill="#ff8f00"/>
+                <rect x="15" y="0"  width="5" height="5" fill="#ff8f00"/>
+                <rect x="5"  y="5"  width="5" height="5" fill="#ffd54f"/>
+                <rect x="10" y="5"  width="5" height="5" fill="#ffd54f"/>
+                <rect x="15" y="5"  width="5" height="5" fill="#ffd54f"/>
+                <rect x="20" y="5"  width="5" height="5" fill="#ffd54f"/>
+                <rect x="0"  y="10" width="5" height="5" fill="#ff9800"/>
+                <rect x="5"  y="10" width="5" height="5" fill="#ffd54f"/>
+                <rect x="10" y="10" width="5" height="5" fill="#fff176"/>
+                <rect x="15" y="10" width="5" height="5" fill="#fff176"/>
+                <rect x="20" y="10" width="5" height="5" fill="#ffd54f"/>
+                <rect x="25" y="10" width="5" height="5" fill="#ff9800"/>
+                <rect x="0"  y="15" width="5" height="5" fill="#ff8f00"/>
+                <rect x="5"  y="15" width="5" height="5" fill="#ff9800"/>
+                <rect x="10" y="15" width="5" height="5" fill="#ffd54f"/>
+                <rect x="15" y="15" width="5" height="5" fill="#ffd54f"/>
+                <rect x="20" y="15" width="5" height="5" fill="#ff9800"/>
+                <rect x="25" y="15" width="5" height="5" fill="#ff8f00"/>
+                <rect x="5"  y="20" width="5" height="5" fill="#e65100"/>
+                <rect x="10" y="20" width="5" height="5" fill="#ff8f00"/>
+                <rect x="15" y="20" width="5" height="5" fill="#ff8f00"/>
+                <rect x="20" y="20" width="5" height="5" fill="#e65100"/>
+              </svg>
+              <div class="candle-body"></div>
+            </div>
+            <div class="cake-dome"></div>
+            <div class="cake-drip-row">
+              <div class="drip"></div><div class="drip"></div>
+              <div class="drip"></div><div class="drip"></div>
+              <div class="drip"></div><div class="drip"></div>
+              <div class="drip"></div><div class="drip"></div>
+            </div>
+            <div class="cake-body"></div>
+            <div class="cake-trim"></div>
+            <div class="cake-base"></div>
+          </div>
+        </div>
+
+        <!-- CLOCK -->
+        <div class="clock-scale-wrap">
+          <div class="clock-wrap">
+            <div class="mon-outer">
+              <div class="mon-screen">
+                <div class="mon-label">✦ current time ✦</div>
+                <div class="mon-time" id="clockTime">00:00:00</div>
+                <div class="mon-date">2026.06.14</div>
+              </div>
+            </div>
+            <div class="mon-stand"></div>
+            <div class="mon-base"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-play" id="btnPlay">♪ PLAY</button>
+
+</div>
+
+<script>
+  /* Stars */
+  const sf = document.getElementById('starField');
+  for (let i = 0; i < 55; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() > 0.72 ? 3 : Math.random() > 0.5 ? 2 : 1;
+    s.style.cssText = [
+      `width:${sz}px`, `height:${sz}px`,
+      `left:${(Math.random()*100).toFixed(1)}%`,
+      `top:${(Math.random()*68).toFixed(1)}%`,
+      `--d:${(Math.random()*2+0.8).toFixed(1)}s`,
+      `--dl:${(Math.random()*3).toFixed(1)}s`
+    ].join(';');
+    sf.appendChild(s);
+  }
+
+  /* Sparkles — viewport → scene local 좌표 변환 포함 */
+  let currentScale = 1;
+
+  function spawnSparkle() {
+    const scene  = document.getElementById('scene');
+    const candle = document.querySelector('.candle-area');
+    if (!candle || !scene) return;
+    const sr = scene.getBoundingClientRect();
+    const cr = candle.getBoundingClientRect();
+    /* getBoundingClientRect()는 viewport 좌표 반환.
+       scene에 scale(s)가 적용돼 있으므로 s로 나눠 scene local 좌표로 변환 */
+    const s  = currentScale;
+    const cx = (cr.left - sr.left + cr.width  / 2) / s;
+    const cy = (cr.top  - sr.top  + cr.height / 2) / s; // 촛불 중간
+    const sp = document.createElement('div');
+    sp.className = 'sp';
+    sp.style.cssText = [
+      `left:${(cx + (Math.random()-0.5)*10).toFixed(1)}px`,
+      `top:${cy.toFixed(1)}px`,
+      `--sd:${(Math.random()*0.8+0.9).toFixed(1)}s`,
+      `--sx:${((Math.random()-0.5)*16).toFixed(1)}px`,
+      `--sy:${-(Math.random()*36+16).toFixed(1)}px`
+    ].join(';');
+    scene.appendChild(sp);
+    setTimeout(() => sp.remove(), 2000);
+  }
+  setInterval(spawnSparkle, 380);
+
+  /* Clock */
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clockTime').textContent = `${h}:${m}:${s}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* 뷰포트에 맞게 씬 스케일 (모바일 1x, 데스크탑 최대 1.5x) */
+  function scaleScene() {
+    const scene = document.getElementById('scene');
+    currentScale = Math.min(
+      window.innerWidth  / 390,
+      window.innerHeight / 680,
+      1.5
+    );
+    scene.style.transform = `scale(${currentScale})`;
+    scene.style.transformOrigin = 'center center';
+  }
+  scaleScene();
+  window.addEventListener('resize', scaleScene);
+
+  /* ── Web Audio API: 8비트 전자 생일초 스타일 Happy Birthday ── */
+  const _C4=261.63, _D4=293.66, _E4=329.63, _F4=349.23,
+        _G4=392.00, _A4=440.00, _Bb4=466.16, _C5=523.25;
+
+  const birthdayMelody = [
+    /* Line 1: Happy Birthday to you */
+    [_C4,.75],[_C4,.25],[_D4,1],[_C4,1],[_F4,1],[_E4,2],
+    /* Line 2: Happy Birthday to you */
+    [_C4,.75],[_C4,.25],[_D4,1],[_C4,1],[_G4,1],[_F4,2],
+    /* Line 3: Happy Birthday dear 아저씨 */
+    [_C4,.75],[_C4,.25],[_C5,1],[_A4,1],[_F4,1],[_E4,1],[_D4,2],
+    /* Line 4: Happy Birthday to you */
+    [_Bb4,.75],[_Bb4,.25],[_A4,1],[_F4,1],[_G4,1],[_F4,3]
+  ];
+
+  function playBirthdaySong(ctx) {
+    const beat = 60 / 152; /* BPM 152 */
+
+    /* 소형 저가 스피커 시뮬레이션: 고주파 차단 */
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = 'lowpass';
+    lpf.frequency.value = 1700;
+    lpf.Q.value = 1.4;
+
+    const master = ctx.createGain();
+    master.gain.value = 0.38;
+    lpf.connect(master);
+    master.connect(ctx.destination);
+
+    let t = ctx.currentTime + 0.06;
+
+    birthdayMelody.forEach(([freq, dur]) => {
+      const nd  = dur * beat;
+      const on  = nd * 0.80; /* staccato: 80%만 소리, 20%는 침묵 */
+      const osc = ctx.createOscillator();
+      const g   = ctx.createGain();
+
+      osc.type = 'square'; /* 8비트 구형파 */
+      osc.frequency.value = freq;
+
+      /* 빠른 어택, 중간 서스테인, 빠른 릴리즈 */
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(1, t + 0.013);
+      g.gain.setValueAtTime(0.88, t + on * 0.55);
+      g.gain.linearRampToValueAtTime(0, t + on);
+
+      osc.connect(g);
+      g.connect(lpf);
+      osc.start(t);
+      osc.stop(t + on + 0.02);
+
+      t += nd;
+    });
+
+    return birthdayMelody.reduce((s, [,d]) => s + d, 0) * beat;
+  }
+
+  let audioCtx     = null;
+  let loopTimer    = null;
+  let songPlaying  = false;
+
+  function songLoop() {
+    if (!songPlaying) return;
+    const dur = playBirthdaySong(audioCtx);
+    loopTimer = setTimeout(songLoop, (dur + 0.35) * 1000);
+  }
+
+  document.getElementById('btnPlay').addEventListener('click', function () {
+    if (songPlaying) {
+      songPlaying = false;
+      clearTimeout(loopTimer);
+      if (audioCtx) { audioCtx.close(); audioCtx = null; }
+      this.textContent = '♪ PLAY';
+      this.classList.remove('playing');
+    } else {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      songPlaying = true;
+      songLoop();
+      this.textContent = '■ STOP';
+      this.classList.add('playing');
+    }
+  });
+</script>
+</body>
+</html>
