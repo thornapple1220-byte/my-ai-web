@@ -466,6 +466,142 @@
     }
     .btn-play:hover { border-color: #c8a050; }
     .btn-play.playing { border-color: #ffd6e0; color: #b8f0c8; }
+
+    /* ── WINDOW (clickable) ── */
+    .window { cursor: pointer; }
+    .window:hover {
+      box-shadow: 0 0 16px rgba(255,170,200,0.45) inset, 0 0 8px rgba(255,150,180,0.3);
+    }
+
+    /* ── LETTER BACKDROP ── */
+    .letter-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(10,9,26,0.52);
+      z-index: 35;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s;
+    }
+    .letter-backdrop.show { opacity: 1; pointer-events: all; }
+
+    /* ── LETTER WRAPPER ── */
+    .letter-wrap {
+      position: absolute;
+      width: 160px;
+      height: 204px;
+      left: 115px;   /* (390-160)/2 */
+      top: 175px;
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+    }
+    .letter-wrap.fly-in {
+      animation: letterFlyIn 1.5s cubic-bezier(0.15,0.85,0.35,1) forwards;
+      pointer-events: all;
+      cursor: pointer;
+    }
+    .letter-wrap.fly-out {
+      animation: letterFlyOut 0.55s ease-in forwards;
+      pointer-events: none;
+    }
+
+    /* window-center(70,100) → letter-center(195,277): offset(-125,-177) */
+    @keyframes letterFlyIn {
+      0%   { transform: translate(-125px,-177px) rotate(-30deg) scale(0.28); opacity: 0; }
+      7%   { opacity: 1; }
+      22%  { transform: translate(-88px, -126px) rotate(24deg)  scale(0.50); }
+      40%  { transform: translate(-57px, -82px)  rotate(-17deg) scale(0.68); }
+      57%  { transform: translate(-34px, -47px)  rotate(12deg)  scale(0.82); }
+      72%  { transform: translate(-15px, -20px)  rotate(-6deg)  scale(0.92); }
+      84%  { transform: translate(-5px,  -6px)   rotate(2deg)   scale(0.97); }
+      100% { transform: translate(0,0)  rotate(0deg)  scale(1);  opacity: 1; }
+    }
+    @keyframes letterFlyOut {
+      0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(-125px,-177px) rotate(-30deg) scale(0.2); opacity: 0; }
+    }
+
+    /* ── LETTER PAPER ── */
+    .letter-paper {
+      width: 160px; height: 204px;
+      background: linear-gradient(180deg, #fffaf4 0%, #fff4ea 100%);
+      border: 4px solid #d4a0b4;
+      box-shadow: 4px 4px 0 #a07080, 6px 6px 0 rgba(0,0,0,0.2);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 18px 14px;
+      image-rendering: pixelated;
+    }
+    /* fold lines */
+    .letter-paper::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 1px;
+      background: rgba(190,140,165,0.22);
+    }
+    .letter-paper::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; left: 50%;
+      width: 1px;
+      background: rgba(190,140,165,0.14);
+    }
+    .letter-stamp {
+      position: absolute;
+      top: 8px; right: 10px;
+      width: 24px; height: 24px;
+      background: #fce4ec;
+      border: 2px solid #d4a0b4;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c2185b;
+    }
+    .letter-deco {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 5px;
+      color: #d4a0b4;
+      letter-spacing: 3px;
+    }
+    .lline {
+      width: 120px; height: 1px;
+      background: rgba(180,130,155,0.35);
+      margin: 2px 0;
+    }
+    .letter-msg {
+      font-family: 'Nanum Gothic', sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+      color: #c2185b;
+      letter-spacing: 8px;
+      text-shadow: 1px 1px 0 rgba(194,24,91,0.25);
+      animation: msgPulse 2s ease-in-out infinite;
+    }
+    @keyframes msgPulse {
+      0%,100% { color: #c2185b; text-shadow: 1px 1px 0 rgba(194,24,91,0.25); }
+      50%      { color: #e91e8c; text-shadow: 0 0 10px rgba(233,30,140,0.5); }
+    }
+    .letter-hearts {
+      font-size: 13px;
+      color: #e8b4c8;
+      letter-spacing: 8px;
+    }
+    .letter-close-hint {
+      position: absolute;
+      bottom: 6px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 4px;
+      color: rgba(170,110,140,0.6);
+      letter-spacing: 1px;
+    }
   </style>
 </head>
 <body>
@@ -475,8 +611,8 @@
   <div class="floor"></div>
   <div class="star-field" id="starField"></div>
 
-  <!-- Window (left) -->
-  <div class="window">
+  <!-- Window (left, clickable) -->
+  <div class="window" id="windowEl">
     <div class="window-bar-h"></div>
     <div class="window-bar-v"></div>
     <div class="moon"></div>
@@ -572,6 +708,24 @@
   </div>
 
   <button class="btn-play" id="btnPlay">♪ PLAY</button>
+
+  <!-- Letter backdrop -->
+  <div class="letter-backdrop" id="letterBackdrop"></div>
+
+  <!-- Flying letter -->
+  <div class="letter-wrap" id="letterWrap">
+    <div class="letter-paper">
+      <div class="letter-stamp">♥</div>
+      <div class="letter-deco">✦  ✦  ✦</div>
+      <div class="lline"></div>
+      <div class="lline"></div>
+      <div class="letter-msg">사랑해</div>
+      <div class="lline"></div>
+      <div class="lline"></div>
+      <div class="letter-hearts">♥  ♥  ♥</div>
+      <div class="letter-close-hint">CLICK TO CLOSE</div>
+    </div>
+  </div>
 
 </div>
 
@@ -711,6 +865,38 @@
     const dur = playBirthdaySong(audioCtx);
     loopTimer = setTimeout(songLoop, (dur + 0.35) * 1000);
   }
+
+  /* ── Window → Flying Letter ── */
+  const windowEl    = document.getElementById('windowEl');
+  const letterWrap  = document.getElementById('letterWrap');
+  const letterBd    = document.getElementById('letterBackdrop');
+  let   letterOn    = false;
+
+  function showLetter() {
+    letterOn = true;
+    letterWrap.style.opacity = '';
+    letterWrap.classList.remove('fly-out');
+    void letterWrap.offsetWidth;
+    letterWrap.classList.add('fly-in');
+    letterBd.classList.add('show');
+  }
+
+  function hideLetter() {
+    if (!letterOn) return;
+    letterOn = false;
+    letterWrap.classList.remove('fly-in');
+    void letterWrap.offsetWidth;
+    letterWrap.classList.add('fly-out');
+    letterBd.classList.remove('show');
+    letterWrap.addEventListener('animationend', () => {
+      letterWrap.classList.remove('fly-out');
+      letterWrap.style.opacity = '0';
+    }, { once: true });
+  }
+
+  windowEl.addEventListener('click', () => letterOn ? hideLetter() : showLetter());
+  letterWrap.addEventListener('click', hideLetter);
+  letterBd.addEventListener('click', hideLetter);
 
   document.getElementById('btnPlay').addEventListener('click', function () {
     if (songPlaying) {
