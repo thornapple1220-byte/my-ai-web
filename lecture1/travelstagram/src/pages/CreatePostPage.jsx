@@ -127,12 +127,18 @@ function CreatePostPage() {
       .map(h => (h.startsWith('#') ? h : `#${h}`))
       .filter(h => h.length > 1);
 
-    await addPost({
+    const result = await addPost({
       image_url: selectedImage,
       caption: caption.trim(),
       hashtags: hashtagList,
       location: location.trim() || '위치 없음',
     });
+
+    if (result?.success === false) {
+      setError(`게시물 등록 실패: ${result.message}`);
+      setSubmitting(false);
+      return;
+    }
 
     navigate('/', { replace: true });
   };

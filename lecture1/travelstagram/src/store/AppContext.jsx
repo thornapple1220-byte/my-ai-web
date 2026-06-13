@@ -173,12 +173,15 @@ export function AppProvider({ children }) {
   };
 
   const addPost = async ({ image_url, caption, hashtags, location }) => {
-    if (!user) return;
+    if (!user) return { success: false, message: '로그인이 필요합니다.' };
+
+    const title = caption.slice(0, 50);
 
     const { data, error } = await supabase
       .from('posts')
       .insert({
         user_id: user.id,
+        title,
         caption,
         image_url,
         tags: hashtags,
@@ -188,10 +191,14 @@ export function AppProvider({ children }) {
       .select('*, users:user_id (nickname, profile_image_url)')
       .single();
 
-    if (error || !data) return;
+    if (error || !data) {
+      console.error('addPost error:', error);
+      return { success: false, message: error?.message || '게시물 등록에 실패했습니다.' };
+    }
 
     const newPost = buildPostShape(data, {}, new Set());
     setPosts(prev => [newPost, ...prev]);
+    return { success: true };
   };
 
   const toggleLike = async (postId) => {

@@ -18,6 +18,12 @@ const theme = createTheme({
       default: '#F0F7FF',
       paper: '#FFFFFF',
     },
+    error: {
+      main: '#F06292',
+      light: '#F8BBD9',
+      dark: '#E91E63',
+      contrastText: '#ffffff',
+    },
     text: {
       primary: '#212121',
       secondary: '#757575',
