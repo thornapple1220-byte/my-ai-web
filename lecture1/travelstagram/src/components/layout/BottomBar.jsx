@@ -9,6 +9,7 @@ import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useApp } from '../../store/AppContext';
 
 function NavItem({ icon, activeIcon, label, path, onClick }) {
   const { pathname } = useLocation();
@@ -37,6 +38,9 @@ function NavItem({ icon, activeIcon, label, path, onClick }) {
 
 function BottomBar() {
   const navigate = useNavigate();
+  const { isGuest } = useApp();
+
+  const handleGuestBlock = () => navigate('/login');
 
   return (
     <Paper
@@ -81,7 +85,7 @@ function BottomBar() {
           <Fab
             size="medium"
             color="primary"
-            onClick={() => navigate('/create')}
+            onClick={isGuest ? handleGuestBlock : () => navigate('/create')}
             sx={{ boxShadow: 3 }}
           >
             <AddIcon />
@@ -93,14 +97,14 @@ function BottomBar() {
           icon={<ChatOutlinedIcon />}
           activeIcon={<ChatIcon color="primary" />}
           label="채팅"
-          onClick={() => navigate('/chat')}
+          onClick={isGuest ? handleGuestBlock : () => navigate('/chat')}
         />
         <NavItem
           path="/mypage"
           icon={<PersonOutlinedIcon />}
           activeIcon={<PersonIcon color="primary" />}
           label="내 정보"
-          onClick={() => navigate('/mypage')}
+          onClick={isGuest ? handleGuestBlock : () => navigate('/mypage')}
         />
       </Box>
     </Paper>

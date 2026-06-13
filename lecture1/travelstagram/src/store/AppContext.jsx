@@ -40,6 +40,15 @@ export function AppProvider({ children }) {
     }
   });
 
+  const [isGuest, setIsGuest] = useState(() => {
+    return localStorage.getItem('travelstagram_guest') === 'true';
+  });
+
+  const loginAsGuest = () => {
+    setIsGuest(true);
+    localStorage.setItem('travelstagram_guest', 'true');
+  };
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -157,7 +166,9 @@ export function AppProvider({ children }) {
 
   const logout = () => {
     setUser(null);
+    setIsGuest(false);
     localStorage.removeItem('travelstagram_user');
+    localStorage.removeItem('travelstagram_guest');
     fetchPosts(null);
   };
 
@@ -239,7 +250,7 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider
-      value={{ user, posts, loading, login, logout, signup, addPost, toggleLike, addComment, fetchPosts }}
+      value={{ user, isGuest, posts, loading, login, logout, signup, loginAsGuest, addPost, toggleLike, addComment, fetchPosts }}
     >
       {children}
     </AppContext.Provider>

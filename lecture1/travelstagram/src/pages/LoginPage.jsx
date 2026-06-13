@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import {
-  Box, TextField, Button, Typography, Alert, InputAdornment, IconButton,
+  Box, TextField, Button, Typography, Alert, InputAdornment, IconButton, Divider,
 } from '@mui/material';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../store/AppContext';
 
@@ -13,8 +14,13 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useApp();
+  const { login, loginAsGuest } = useApp();
   const navigate = useNavigate();
+
+  const handleGuestLogin = () => {
+    loginAsGuest();
+    navigate('/', { replace: true });
+  };
 
   const handleLogin = async () => {
     if (!username.trim() || !password) {
@@ -87,6 +93,23 @@ function LoginPage() {
           boxShadow: '0 8px 40px rgba(0,0,0,0.12)',
         }}
       >
+        <Box
+          sx={{
+            mb: 2,
+            p: 1.5,
+            bgcolor: '#f0f7ff',
+            borderRadius: 2,
+            border: '1px solid #bbdefb',
+          }}
+        >
+          <Typography variant="caption" color="text.secondary" display="block" fontWeight={600} mb={0.25}>
+            테스트 계정 안내
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            아이디 <strong>test</strong> · 비밀번호 <strong>test</strong>
+          </Typography>
+        </Box>
+
         {error && (
           <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }} onClose={() => setError('')}>
             {error}
@@ -145,6 +168,40 @@ function LoginPage() {
         >
           회원가입
         </Button>
+
+        <Divider sx={{ my: 2, color: 'text.disabled', fontSize: '0.8rem' }}>또는</Divider>
+
+        <Button
+          fullWidth
+          variant="text"
+          size="large"
+          onClick={handleGuestLogin}
+          startIcon={<ExploreOutlinedIcon />}
+          sx={{
+            borderRadius: 3,
+            fontWeight: 600,
+            py: 1.3,
+            color: 'text.secondary',
+            border: '1.5px dashed',
+            borderColor: 'divider',
+            '&:hover': {
+              bgcolor: 'rgba(0,0,0,0.04)',
+              borderColor: 'text.disabled',
+            },
+          }}
+        >
+          로그인 없이 둘러보기
+        </Button>
+
+        <Typography
+          variant="caption"
+          color="text.disabled"
+          textAlign="center"
+          display="block"
+          mt={1}
+        >
+          좋아요·댓글·게시물 작성은 로그인 후 이용 가능해요
+        </Typography>
 
       </Box>
     </Box>

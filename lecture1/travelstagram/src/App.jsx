@@ -11,12 +11,17 @@ import ChatRoomPage from './pages/ChatRoomPage';
 import MainLayout from './components/layout/MainLayout';
 
 function PrivateRoute({ children }) {
+  const { user, isGuest } = useApp();
+  return (user || isGuest) ? children : <Navigate to="/login" replace />;
+}
+
+function LoginRequiredRoute({ children }) {
   const { user } = useApp();
   return user ? children : <Navigate to="/login" replace />;
 }
 
 function App() {
-  const { user } = useApp();
+  const { user, isGuest } = useApp();
 
   return (
     <BrowserRouter basename="/my-ai-web">
@@ -24,14 +29,14 @@ function App() {
         {/* 비인증 페이지 */}
         <Route
           path="/login"
-          element={user ? <Navigate to="/" replace /> : <LoginPage />}
+          element={(user || isGuest) ? <Navigate to="/" replace /> : <LoginPage />}
         />
         <Route
           path="/signup"
           element={user ? <Navigate to="/" replace /> : <SignupPage />}
         />
 
-        {/* 인증 필요 페이지 - 레이아웃 포함 */}
+        {/* 게스트도 접근 가능한 페이지 */}
         <Route
           path="/"
           element={
@@ -52,42 +57,44 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/* 로그인 필수 페이지 */}
         <Route
           path="/chat"
           element={
-            <PrivateRoute>
+            <LoginRequiredRoute>
               <MainLayout>
                 <ChatPage />
               </MainLayout>
-            </PrivateRoute>
+            </LoginRequiredRoute>
           }
         />
         <Route
           path="/mypage"
           element={
-            <PrivateRoute>
+            <LoginRequiredRoute>
               <MainLayout>
                 <MyPage />
               </MainLayout>
-            </PrivateRoute>
+            </LoginRequiredRoute>
           }
         />
 
-        {/* 전체화면 페이지 (레이아웃 없음) */}
+        {/* 전체화면 페이지 (로그인 필수) */}
         <Route
           path="/create"
           element={
-            <PrivateRoute>
+            <LoginRequiredRoute>
               <CreatePostPage />
-            </PrivateRoute>
+            </LoginRequiredRoute>
           }
         />
         <Route
           path="/chat/:id"
           element={
-            <PrivateRoute>
+            <LoginRequiredRoute>
               <ChatRoomPage />
-            </PrivateRoute>
+            </LoginRequiredRoute>
           }
         />
 

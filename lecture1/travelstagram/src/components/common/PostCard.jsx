@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import {
   Box, Typography, Avatar, IconButton, TextField, Button,
-  Drawer, Divider,
+  Drawer, Divider, Snackbar, Alert,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../store/AppContext';
 
 function formatTime(dateStr) {
@@ -27,12 +28,24 @@ function formatTime(dateStr) {
 function PostCard({ post }) {
   const [commentOpen, setCommentOpen] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const { toggleLike, addComment, user } = useApp();
+  const [guestSnack, setGuestSnack] = useState(false);
+  const { toggleLike, addComment, user, isGuest } = useApp();
+  const navigate = useNavigate();
 
   const handleAddComment = () => {
     if (!newComment.trim()) return;
     addComment(post.id, newComment.trim());
     setNewComment('');
+  };
+
+  const handleLikeClick = () => {
+    if (isGuest) { setGuestSnack(true); return; }
+    toggleLike(post.id);
+  };
+
+  const handleCommentOpen = () => {
+    if (isGuest) { setGuestSnack(true); return; }
+    setCommentOpen(true);
   };
 
   const recentComments = post.comments.slice(-2);
@@ -82,12 +95,12 @@ function PostCard({ post }) {
       {/* 좋아요 + 댓글 아이콘 */}
       <Box sx={{ display: 'flex', alignItems: 'center', px: 0.5, pt: 0.5 }}>
         <IconButton
-          onClick={() => toggleLike(post.id)}
+          onClick={handleLikeClick}
           sx={{ color: post.liked ? 'error.main' : 'text.primary' }}
         >
           {post.liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
-        <IconButton onClick={() => setCommentOpen(true)} sx={{ color: 'text.primary' }}>
+        <IconButton onClick={handleCommentOpen} sx={{ color: 'text.primary' }}>
           <ModeCommentOutlinedIcon />
         </IconButton>
       </Box>
@@ -148,6 +161,33 @@ function PostCard({ post }) {
           {formatTime(post.createdAt)}
         </Typography>
       </Box>
+
+      {/* 게스트 로그인 유도 Snackbar */}
+      <Snackbar
+        open={guestSnack}
+        autoHideDuration={3000}
+        onClose={() => setGuestSnack(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{ bottom: 80 }}
+      >
+        <Alert
+          severity="info"
+          onClose={() => setGuestSnack(false)}
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              fontWeight={700}
+              onClick={() => navigate('/login')}
+            >
+              로그인
+            </Button>
+          }
+          sx={{ borderRadius: 3, fontWeight: 500 }}
+        >
+          로그인 후 이용할 수 있어요 ✈️
+        </Alert>
+      </Snackbar>
 
       {/* 댓글 Drawer (아래에서 올라오는 모달) */}
       <Drawer
