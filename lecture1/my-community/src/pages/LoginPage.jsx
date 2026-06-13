@@ -5,6 +5,7 @@ import {
   FormControlLabel, Checkbox, Alert, Stack, Divider,
 } from '@mui/material';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe';
+import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import { useAuth } from '../store/AuthContext';
 
 function LoginPage() {
@@ -13,8 +14,13 @@ function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, loginAsGuest } = useAuth();
   const navigate = useNavigate();
+
+  const handleGuestLogin = () => {
+    loginAsGuest();
+    navigate('/');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,6 +102,24 @@ function LoginPage() {
           로그인
         </Typography>
 
+        <Box
+          sx={{
+            mb: 2,
+            p: 1.5,
+            bgcolor: '#fff0f6',
+            borderRadius: 2,
+            border: '1px solid #f8bbd0',
+            textAlign: 'left',
+          }}
+        >
+          <Typography variant="caption" color="text.secondary" display="block" fontWeight={600} mb={0.25}>
+            테스트 계정 안내
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            아이디 <strong>test2</strong> · 비밀번호 <strong>test1234!</strong>
+          </Typography>
+        </Box>
+
         {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 2, textAlign: 'left' }}>{error}</Alert>}
 
         <Box component="form" onSubmit={handleSubmit}>
@@ -156,6 +180,30 @@ function LoginPage() {
         >
           회원가입
         </Button>
+
+        <Divider sx={{ my: 2, color: 'text.disabled', fontSize: '0.8rem' }}>또는</Divider>
+
+        <Button
+          fullWidth
+          variant="text"
+          size="large"
+          onClick={handleGuestLogin}
+          startIcon={<ExploreOutlinedIcon />}
+          sx={{
+            borderRadius: 3,
+            py: 1.3,
+            color: 'text.secondary',
+            border: '1.5px dashed',
+            borderColor: 'divider',
+            '&:hover': { bgcolor: 'rgba(0,0,0,0.04)', borderColor: 'text.disabled' },
+          }}
+        >
+          로그인 없이 둘러보기
+        </Button>
+
+        <Typography variant="caption" color="text.disabled" textAlign="center" display="block" mt={1}>
+          게시글 작성은 로그인 후 이용 가능해요
+        </Typography>
       </Box>
     </Box>
   );

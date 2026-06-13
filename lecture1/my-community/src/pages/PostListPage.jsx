@@ -109,6 +109,7 @@ function PostListPage() {
                   variant="outlined"
                   size="small"
                   startIcon={<PersonIcon />}
+                  onClick={() => navigate('/mypage')}
                   sx={{
                     borderRadius: 20, height: 36, fontWeight: 600,
                     borderColor: 'divider', color: 'text.primary',
@@ -352,6 +353,12 @@ function PostListPage() {
         >
           <BottomNavigation showLabels value={0}>
             <BottomNavigationAction label="홈" icon={<HomeIcon />} sx={{ color: 'primary.main' }} />
+            <BottomNavigationAction
+              label="마이페이지"
+              icon={<PersonIcon />}
+              onClick={() => navigate('/mypage')}
+              sx={{ color: 'text.secondary' }}
+            />
             <BottomNavigationAction
               label="로그아웃"
               icon={<LogoutIcon />}

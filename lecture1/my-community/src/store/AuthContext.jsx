@@ -6,6 +6,12 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(() => localStorage.getItem('cafe_guest') === 'true');
+
+  const loginAsGuest = () => {
+    setIsGuest(true);
+    localStorage.setItem('cafe_guest', 'true');
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -47,11 +53,13 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
+    setIsGuest(false);
+    localStorage.removeItem('cafe_guest');
     await supabase.auth.signOut();
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, isGuest, loginAsGuest, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
