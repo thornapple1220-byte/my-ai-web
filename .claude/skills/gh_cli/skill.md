@@ -1,4 +1,4 @@
-# GitHub 백업 스킬 (gh CLI)
+﻿# GitHub 백업 스킬 (gh CLI)
 
 이 스킬은 gh CLI를 사용하여 GitHub 저장소 관리 및 배포를 수행한다.
 모든 명령어는 Bash 도구로 직접 실행한다.
