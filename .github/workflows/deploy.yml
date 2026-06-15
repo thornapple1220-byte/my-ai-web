@@ -44,7 +44,7 @@ jobs:
         run: npm ci && npm run build
 
       - name: Install & Build findgym
-        working-directory: findgym
+        working-directory: lecture1/findgym
         env:
           VITE_FINDGYM_SUPABASE_URL: ${{ secrets.VITE_FINDGYM_SUPABASE_URL }}
           VITE_FINDGYM_SUPABASE_ANON_KEY: ${{ secrets.VITE_FINDGYM_SUPABASE_ANON_KEY }}
@@ -57,7 +57,7 @@ jobs:
           mkdir -p dist/cafe
           cp -r lecture1/my-community/dist/. dist/cafe/
           mkdir -p dist/findgym
-          cp -r findgym/dist/. dist/findgym/
+          cp -r lecture1/findgym/dist/. dist/findgym/
           cp birthday.html dist/birthday.html
           cp dist/index.html dist/404.html
 
