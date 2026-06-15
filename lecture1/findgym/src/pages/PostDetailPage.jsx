@@ -102,7 +102,7 @@ export default function PostDetailPage() {
           <h1 className="text-white text-xl font-black mb-4">{post.title}</h1>
 
           {post.image_urls?.[0] && (
-            <img src={post.image_urls[0]} alt="" className="w-full rounded-2xl mb-4 max-h-64 object-cover" />
+            <img src={post.image_urls[0]} alt="" className="w-full rounded-2xl mb-4 h-auto" />
           )}
 
           <p className="text-gray-300 leading-relaxed mb-5">{post.content}</p>

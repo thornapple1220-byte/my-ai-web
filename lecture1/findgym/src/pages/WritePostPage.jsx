@@ -104,7 +104,7 @@ export default function WritePostPage() {
           />
           {imagePreview ? (
             <div className="relative">
-              <img src={imagePreview} alt="미리보기" className="w-full h-52 object-cover rounded-xl" />
+              <img src={imagePreview} alt="미리보기" className="w-full h-auto rounded-xl" />
               <button
                 type="button"
                 onClick={removeImage}

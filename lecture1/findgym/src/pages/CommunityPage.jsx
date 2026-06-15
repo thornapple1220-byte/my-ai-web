@@ -83,7 +83,7 @@ function PostCard({ post, currentUser, onLike }) {
       {/* 게시글 이미지 */}
       {post.image_urls?.[0] && (
         <Link to={`/community/post/${post.id}`}>
-          <img src={post.image_urls[0]} alt="" className="w-full h-48 object-cover" />
+          <img src={post.image_urls[0]} alt="" className="w-full h-auto" />
         </Link>
       )}
 
