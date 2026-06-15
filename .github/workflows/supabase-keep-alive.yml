@@ -10,9 +10,9 @@ jobs:
   ping-supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase Health Check
+      - name: Ping Supabase (gyms 테이블)
         run: |
-          curl -s "${{ secrets.SUPABASE_URL }}/rest/v1/health_check?select=id&limit=1" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          curl -sf "${{ secrets.VITE_FINDGYM_SUPABASE_URL }}/rest/v1/gyms?select=id&limit=1" \
+            -H "apikey: ${{ secrets.VITE_FINDGYM_SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.VITE_FINDGYM_SUPABASE_ANON_KEY }}"
           echo "Supabase ping successful!"
