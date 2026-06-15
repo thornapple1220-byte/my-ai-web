@@ -11,6 +11,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [category, setCategory] = useState('전체')
   const [search, setSearch] = useState('')
+  const [fetchError, setFetchError] = useState('')
   const { profile } = useAuth()
 
   useEffect(() => {
@@ -19,9 +20,11 @@ export default function HomePage() {
 
   async function fetchGyms() {
     setLoading(true)
+    setFetchError('')
     let query = supabase.from('gyms').select('*').order('rating', { ascending: false })
     if (category !== '전체') query = query.eq('category', category)
-    const { data } = await query
+    const { data, error } = await query
+    if (error) setFetchError(error.message)
     setGyms(data || [])
     setLoading(false)
   }
@@ -71,6 +74,14 @@ export default function HomePage() {
         ))}
       </div>
 
+      {/* 에러 메시지 */}
+      {fetchError && (
+        <div className="bg-red-900/20 border border-red-700/50 rounded-xl p-4 mb-4">
+          <p className="text-red-400 text-sm font-semibold mb-1">데이터를 불러오지 못했어요</p>
+          <p className="text-red-300/70 text-xs break-all">{fetchError}</p>
+        </div>
+      )}
+
       {/* 헬스장 목록 */}
       {loading ? (
         <div className="flex justify-center py-20">
@@ -82,7 +93,7 @@ export default function HomePage() {
           <p>검색 결과가 없습니다</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-8">
           {filtered.map(gym => (
             <GymCard key={gym.id} gym={gym} />
           ))}
@@ -94,7 +105,7 @@ export default function HomePage() {
 
 function GymCard({ gym }) {
   return (
-    <Link to={`/gym/${gym.id}`}>
+    <Link to={`/gym/${gym.id}`} className="block">
       <div className="bg-[#13131f] rounded-2xl overflow-hidden border border-purple-900/20 hover:border-purple-600/50 transition group">
         {/* 이미지 */}
         <div className="relative h-44 overflow-hidden">
@@ -115,10 +126,10 @@ function GymCard({ gym }) {
         </div>
 
         {/* 정보 */}
-        <div className="p-4">
-          <h3 className="text-white font-bold text-base mb-1">{gym.name}</h3>
-          <div className="flex items-center gap-1 text-gray-500 text-sm mb-2">
-            <MapPin className="w-3.5 h-3.5" />
+        <div className="p-5">
+          <h3 className="text-white font-bold text-base mb-2">{gym.name}</h3>
+          <div className="flex items-center gap-1 text-gray-500 text-sm mb-3">
+            <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">{gym.address}</span>
           </div>
           {gym.price_info && (

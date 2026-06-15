@@ -1,5 +1,5 @@
-import { Link, useLocation } from 'react-router-dom'
-import { Dumbbell, Home, Users, Calendar, User } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Dumbbell, Home, Users, Calendar, User, LogIn } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const navItems = [
@@ -11,9 +11,19 @@ const navItems = [
 
 export default function Navbar() {
   const location = useLocation()
-  const { user } = useAuth()
+  const navigate = useNavigate()
+  const { user, isGuest } = useAuth()
 
-  if (!user) return null
+  if (!user && !isGuest) return null
+
+  function handleGuestNav(path) {
+    // 게스트는 예약·마이페이지 접근 시 로그인 페이지로
+    if (isGuest && (path === '/reservations' || path === '/mypage')) {
+      navigate('/login')
+      return
+    }
+    navigate(path)
+  }
 
   return (
     <>
@@ -26,6 +36,14 @@ export default function Navbar() {
               파인드짐
             </span>
           </Link>
+          {isGuest && (
+            <Link
+              to="/login"
+              className="flex items-center gap-1.5 text-sm text-purple-400 border border-purple-700/50 px-3 py-1.5 rounded-lg hover:bg-purple-900/30 transition"
+            >
+              <LogIn className="w-4 h-4" />로그인
+            </Link>
+          )}
         </div>
       </header>
 
@@ -34,17 +52,18 @@ export default function Navbar() {
         <div className="max-w-lg mx-auto flex">
           {navItems.map(({ path, icon: Icon, label }) => {
             const active = location.pathname === path
+            const guestLocked = isGuest && (path === '/reservations' || path === '/mypage')
             return (
-              <Link
+              <button
                 key={path}
-                to={path}
+                onClick={() => handleGuestNav(path)}
                 className={`flex-1 flex flex-col items-center py-2 gap-0.5 transition-colors ${
-                  active ? 'text-purple-400' : 'text-gray-500 hover:text-gray-300'
+                  active ? 'text-purple-400' : guestLocked ? 'text-gray-700' : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
                 <Icon className="w-5 h-5" />
                 <span className="text-[10px]">{label}</span>
-              </Link>
+              </button>
             )
           })}
         </div>

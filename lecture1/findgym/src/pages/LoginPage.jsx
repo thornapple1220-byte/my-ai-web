@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [showPw, setShowPw] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signIn } = useAuth()
+  const { signIn, enterGuestMode } = useAuth()
   const navigate = useNavigate()
 
   async function handleLogin(e) {
@@ -22,10 +22,9 @@ export default function LoginPage() {
     setLoading(false)
   }
 
-  async function handleGuest() {
-    const { error } = await signIn({ username: 'guest', password: 'guest1234!' })
-    if (!error) navigate('/')
-    else setError('게스트 계정이 없습니다. 먼저 게스트 계정을 생성해주세요.')
+  function handleGuest() {
+    enterGuestMode()
+    navigate('/')
   }
 
   return (
@@ -84,8 +83,24 @@ export default function LoginPage() {
         </button>
       </form>
 
+      {/* 테스트 계정 안내 */}
+      <div className="mt-6 w-full max-w-sm">
+        <button
+          type="button"
+          onClick={() => { setUsername('test'); setPassword('test123') }}
+          className="w-full bg-purple-900/20 border border-purple-800/40 rounded-xl px-4 py-3 text-left hover:bg-purple-900/30 transition"
+        >
+          <p className="text-purple-400 text-xs font-bold mb-1">🧪 테스트 계정</p>
+          <div className="flex gap-4 text-sm">
+            <span className="text-gray-400">아이디 <span className="text-white font-semibold">test</span></span>
+            <span className="text-gray-400">비밀번호 <span className="text-white font-semibold">test123</span></span>
+          </div>
+          <p className="text-gray-600 text-xs mt-1">클릭하면 자동 입력돼요</p>
+        </button>
+      </div>
+
       {/* 하단 버튼들 */}
-      <div className="mt-6 w-full max-w-sm space-y-3">
+      <div className="mt-3 w-full max-w-sm space-y-3">
         <button
           onClick={handleGuest}
           className="w-full py-3 rounded-xl font-semibold text-gray-400 border border-gray-700/50 hover:border-purple-700/50 hover:text-gray-200 transition"
