@@ -35,6 +35,42 @@ a { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
 
 /* ===========================
+   Custom Cursor
+=========================== */
+body { cursor: none; }
+
+#moov-cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan), 0 0 20px rgba(0,240,255,0.4);
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s, box-shadow 0.2s;
+}
+#moov-cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,240,255,0.5);
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: width 0.15s, height 0.15s, border-color 0.2s, transform 0.08s;
+}
+#moov-cursor.hover {
+  width: 20px; height: 20px;
+  background: var(--pink);
+  box-shadow: 0 0 14px var(--pink), 0 0 28px rgba(255,0,122,0.4);
+}
+#moov-cursor-ring.hover {
+  width: 52px; height: 52px;
+  border-color: rgba(255,0,122,0.5);
+}
+
+/* ===========================
    Scrollbar
 =========================== */
 ::-webkit-scrollbar { width: 4px; }
@@ -421,6 +457,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .card__info { font-size: 0.73rem; color: rgba(255,255,255,0.3); }
 .card__genre {}
 .card__rating { color: #FFD700; }
+
+/* 3D 틸트 — JS가 인라인으로 transform 주입 */
+.card, .rec-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.card.tilt-reset, .rec-card.tilt-reset {
+  transition: transform 0.5s ease, box-shadow 0.35s ease, border-color 0.35s ease !important;
+}
 
 /* 동적 로드 카드 — IntersectionObserver 없이 즉시 fade-in */
 .card--loaded {

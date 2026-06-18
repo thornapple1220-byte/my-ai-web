@@ -159,3 +159,86 @@ async function loadData() {
 }
 
 document.addEventListener('DOMContentLoaded', loadData);
+
+// ── 커스텀 네온 커서 ─────────────────────────────────────────
+(function initCursor() {
+  const dot  = document.createElement('div'); dot.id  = 'moov-cursor';
+  const ring = document.createElement('div'); ring.id = 'moov-cursor-ring';
+  document.body.append(dot, ring);
+
+  let mx = -100, my = -100, rx = -100, ry = -100;
+
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left  = mx + 'px';
+    dot.style.top   = my + 'px';
+  }, { passive: true });
+
+  // 링은 약간 지연되어 따라옴
+  (function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+
+  // 클릭 가능한 모든 요소에 hover 시 커서 확대
+  const HOVER_SEL = 'a, button, .card, .rec-card, .cast-card, .nav__link, .logo, .footer__link, [onclick]';
+
+  function addHover() {
+    document.querySelectorAll(HOVER_SEL).forEach(el => {
+      if (el.dataset.cursorBound) return;
+      el.dataset.cursorBound = '1';
+      el.addEventListener('mouseenter', () => { dot.classList.add('hover'); ring.classList.add('hover'); });
+      el.addEventListener('mouseleave', () => { dot.classList.remove('hover'); ring.classList.remove('hover'); });
+    });
+  }
+  addHover();
+  // 동적 카드 렌더 후에도 재등록
+  new MutationObserver(addHover).observe(document.body, { childList: true, subtree: true });
+
+  // 클릭 시 커서 펄스
+  document.addEventListener('mousedown', () => {
+    dot.style.transform  = 'translate(-50%,-50%) scale(0.6)';
+    ring.style.transform = 'translate(-50%,-50%) scale(0.8)';
+  });
+  document.addEventListener('mouseup', () => {
+    dot.style.transform  = '';
+    ring.style.transform = '';
+  });
+})();
+
+// ── 3D 카드 틸트 ────────────────────────────────────────────
+(function initTilt() {
+  const TILT_SEL = '.card, .rec-card';
+  const MAX_ROT  = 12;
+
+  function bindTilt(el) {
+    if (el.dataset.tiltBound) return;
+    el.dataset.tiltBound = '1';
+
+    el.addEventListener('mousemove', (e) => {
+      const r  = el.getBoundingClientRect();
+      const x  = (e.clientX - r.left) / r.width  - 0.5;   // -0.5 ~ 0.5
+      const y  = (e.clientY - r.top)  / r.height - 0.5;
+      const rY =  x * MAX_ROT;
+      const rX = -y * MAX_ROT;
+      el.style.transition = 'transform 0.1s ease, box-shadow 0.35s ease, border-color 0.35s ease';
+      el.style.transform  = `perspective(800px) rotateX(${rX}deg) rotateY(${rY}deg) scale(1.04)`;
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.classList.add('tilt-reset');
+      el.style.transform = '';
+      setTimeout(() => el.classList.remove('tilt-reset'), 500);
+    });
+  }
+
+  function bindAll() {
+    document.querySelectorAll(TILT_SEL).forEach(bindTilt);
+  }
+  bindAll();
+  new MutationObserver(bindAll).observe(document.getElementById('contentGrid')  || document.body, { childList: true });
+  new MutationObserver(bindAll).observe(document.getElementById('recommendGrid') || document.body, { childList: true });
+})();

@@ -128,6 +128,12 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    body { cursor: none; }
+    #moov-cursor { position:fixed;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 20px rgba(0,240,255,.4);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s; }
+    #moov-cursor-ring { position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(0,240,255,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%); }
+    #moov-cursor.hover { width:20px;height:20px;background:var(--pink);box-shadow:0 0 14px var(--pink),0 0 28px rgba(255,0,122,.4); }
+    #moov-cursor-ring.hover { width:52px;height:52px;border-color:rgba(255,0,122,.5); }
+
     @media (max-width: 480px) {
       .card { padding: 36px 24px; }
       header { padding: 0 20px; }
@@ -183,6 +189,19 @@
     const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let toastTimer = null;
+    (function(){
+      const dot=document.createElement('div');dot.id='moov-cursor';
+      const ring=document.createElement('div');ring.id='moov-cursor-ring';
+      document.body.append(dot,ring);
+      let mx=-100,my=-100,rx=-100,ry=-100;
+      document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';},{passive:true});
+      (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+      document.querySelectorAll('a,button,input,label,[onclick]').forEach(el=>{
+        el.addEventListener('mouseenter',()=>{dot.classList.add('hover');ring.classList.add('hover');});
+        el.addEventListener('mouseleave',()=>{dot.classList.remove('hover');ring.classList.remove('hover');});
+      });
+    })();
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
