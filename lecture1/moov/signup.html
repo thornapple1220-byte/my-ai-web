@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOOV — 회원가입</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0D0E12;
+      --card-bg: #161820;
+      --cyan:    #00F0FF;
+      --pink:    #FF007A;
+      --white:   #FFFFFF;
+      --gray:    #8A8D99;
+      --border:  rgba(255,255,255,0.08);
+      --glow-cyan: 0 0 20px rgba(0,240,255,0.45), 0 0 40px rgba(0,240,255,0.15);
+      --glow-pink: 0 0 20px rgba(255,0,122,0.45), 0 0 40px rgba(255,0,122,0.15);
+    }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .bg {
+      position: fixed; inset: 0;
+      background: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1600&h=900&fit=crop')
+                  center / cover no-repeat;
+      filter: brightness(0.18) saturate(0.6);
+      z-index: 0;
+    }
+    header {
+      position: relative; z-index: 10;
+      padding: 0 40px; height: 70px;
+      display: flex; align-items: center;
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 6px;
+      color: var(--cyan); text-shadow: var(--glow-cyan);
+      text-decoration: none;
+    }
+    main {
+      position: relative; z-index: 10;
+      flex: 1; display: flex;
+      align-items: center; justify-content: center;
+      padding: 40px 20px;
+    }
+    .card {
+      width: 100%; max-width: 420px;
+      background: rgba(22, 24, 32, 0.9);
+      border: 1px solid rgba(0,240,255,0.15);
+      border-radius: 16px; padding: 48px 40px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 60px rgba(0,0,0,0.5);
+    }
+    .card__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+    .card__sub { font-size: 0.875rem; color: var(--gray); margin-bottom: 36px; }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block; font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 1px; color: var(--gray);
+      margin-bottom: 8px; text-transform: uppercase;
+    }
+    .form-group input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px;
+      color: var(--white); font-size: 0.95rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group input::placeholder { color: rgba(255,255,255,0.2); }
+    .form-group input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,240,255,0.1);
+    }
+    .form-group input.error { border-color: var(--pink); }
+
+    .hint {
+      font-size: 0.75rem; color: var(--gray);
+      margin-top: 6px; line-height: 1.5;
+    }
+    .hint.error-msg { color: var(--pink); display: none; }
+    .hint.error-msg.show { display: block; }
+
+    .btn-submit {
+      width: 100%; padding: 15px;
+      background: var(--cyan); color: var(--bg);
+      border: none; border-radius: 8px;
+      font-size: 1rem; font-weight: 700;
+      font-family: 'Noto Sans KR', sans-serif;
+      letter-spacing: 1px; cursor: pointer;
+      box-shadow: var(--glow-cyan);
+      transition: all 0.3s; margin-bottom: 20px;
+      margin-top: 8px;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0,240,255,0.6); }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .login-link {
+      text-align: center; font-size: 0.875rem; color: var(--gray);
+    }
+    .login-link a { color: var(--cyan); text-decoration: none; }
+    .login-link a:hover { text-decoration: underline; }
+
+    .toast {
+      position: fixed; bottom: 36px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(22,24,32,0.95);
+      border: 1px solid var(--cyan); border-radius: 8px;
+      padding: 14px 28px; font-size: 0.9rem; color: var(--white);
+      box-shadow: var(--glow-cyan); opacity: 0; pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s; z-index: 9999; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 480px) {
+      .card { padding: 36px 24px; }
+      header { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <header>
+    <a href="index.html" class="logo">MOOV</a>
+  </header>
+
+  <main>
+    <div class="card">
+      <h1 class="card__title">회원가입</h1>
+      <p class="card__sub">MOOV에 오신 것을 환영합니다</p>
+
+      <form id="signupForm" onsubmit="handleSignup(event)" novalidate>
+        <div class="form-group">
+          <label>아이디</label>
+          <input type="text" id="username" placeholder="영문, 숫자 4~20자" autocomplete="username" />
+          <p class="hint">영문, 숫자, 밑줄(_)만 사용 가능 · 4~20자</p>
+          <p class="hint error-msg" id="usernameError"></p>
+        </div>
+
+        <div class="form-group">
+          <label>비밀번호</label>
+          <input type="password" id="password" placeholder="8자 이상 입력하세요" autocomplete="new-password" />
+          <p class="hint">영문 + 숫자 조합 8자 이상</p>
+          <p class="hint error-msg" id="passwordError"></p>
+        </div>
+
+        <div class="form-group">
+          <label>비밀번호 확인</label>
+          <input type="password" id="passwordConfirm" placeholder="비밀번호를 다시 입력하세요" autocomplete="new-password" />
+          <p class="hint error-msg" id="confirmError"></p>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">가입하기</button>
+      </form>
+
+      <p class="login-link">이미 계정이 있으신가요? <a href="login.html">로그인</a></p>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://zhsgrijtbgfrflwwgwwp.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpoc2dyaWp0YmdmcmZsd3dnd3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTczODEsImV4cCI6MjA5NjQzMzM4MX0.FiE8krEBr4pqOdUx7k3_Sh4sqfOO7fB0H8sfr2Yfbbo';
+    const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+    function clearError(id) {
+      const el = document.getElementById(id);
+      el.textContent = '';
+      el.classList.remove('show');
+    }
+
+    function validate(username, password, confirm) {
+      let valid = true;
+      clearError('usernameError');
+      clearError('passwordError');
+      clearError('confirmError');
+      document.getElementById('username').classList.remove('error');
+      document.getElementById('password').classList.remove('error');
+      document.getElementById('passwordConfirm').classList.remove('error');
+
+      if (!/^[a-zA-Z0-9_]{4,20}$/.test(username)) {
+        showError('usernameError', '영문, 숫자, 밑줄(_)만 사용 가능하며 4~20자여야 합니다');
+        document.getElementById('username').classList.add('error');
+        valid = false;
+      }
+      if (password.length < 8 || !/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+        showError('passwordError', '영문과 숫자를 포함한 8자 이상이어야 합니다');
+        document.getElementById('password').classList.add('error');
+        valid = false;
+      }
+      if (password !== confirm) {
+        showError('confirmError', '비밀번호가 일치하지 않습니다');
+        document.getElementById('passwordConfirm').classList.add('error');
+        valid = false;
+      }
+      return valid;
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm  = document.getElementById('passwordConfirm').value;
+
+      if (!validate(username, password, confirm)) return;
+      if (!supabaseClient) { showToast('서버 연결에 실패했습니다'); return; }
+
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = '가입 중...';
+      btn.disabled = true;
+
+      // 아이디를 내부 이메일로 변환하여 Supabase Auth 사용
+      const fakeEmail = `${username.toLowerCase()}@moov.app`;
+
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: fakeEmail,
+        password,
+        options: { data: { username } }
+      });
+
+      btn.textContent = '가입하기';
+      btn.disabled = false;
+
+      if (error) {
+        if (error.message.includes('already registered')) {
+          showError('usernameError', '이미 사용 중인 아이디입니다');
+          document.getElementById('username').classList.add('error');
+        } else {
+          showToast('오류: ' + error.message);
+        }
+      } else {
+        showToast('가입 완료! 로그인 페이지로 이동합니다');
+        setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+      }
+    }
+  </script>
+</body>
+</html>
