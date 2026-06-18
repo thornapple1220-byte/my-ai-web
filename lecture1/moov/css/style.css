@@ -620,6 +620,7 @@ body { cursor: none; }
   font-size: 1.2rem;
   box-shadow: var(--glow-pink);
   padding: 0;
+  align-self: center;
   transform: scale(0.75);
   transition: transform var(--transition);
 }
