@@ -5,7 +5,11 @@
 // ── Supabase 초기화 ──────────────────────────────────────────
 const SUPABASE_URL = 'https://zhsgrijtbgfrflwwgwwp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpoc2dyaWp0YmdmcmZsd3dnd3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTczODEsImV4cCI6MjA5NjQzMzM4MX0.FiE8krEBr4pqOdUx7k3_Sh4sqfOO7fB0H8sfr2Yfbbo';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+if (!window.supabase) {
+  console.error('Supabase CDN 로드 실패 — window.supabase undefined');
+}
+const supabase = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── Toast 메시지 ─────────────────────────────────────────────
 let toastTimer = null;
@@ -101,6 +105,11 @@ function renderRecommendCards(recs) {
 
 // ── Supabase 데이터 로드 ─────────────────────────────────────
 async function loadData() {
+  if (!supabase) {
+    document.getElementById('contentGrid').innerHTML = '<p style="color:var(--gray);grid-column:1/-1;text-align:center;padding:40px">콘텐츠를 불러올 수 없습니다 (Supabase 연결 실패)</p>';
+    document.getElementById('recommendGrid').innerHTML = '';
+    return;
+  }
   try {
     const [{ data: contents, error: e1 }, { data: recs, error: e2 }] = await Promise.all([
       supabase.from('moov_contents').select('*').order('sort_order'),
@@ -112,6 +121,7 @@ async function loadData() {
     if (recs?.length) renderRecommendCards(recs);
   } catch (err) {
     console.error('MOOV 데이터 로드 실패:', err);
+    document.getElementById('contentGrid').innerHTML = `<p style="color:var(--gray);grid-column:1/-1;text-align:center;padding:40px">오류: ${err.message}</p>`;
   }
 }
 
