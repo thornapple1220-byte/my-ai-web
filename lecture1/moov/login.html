@@ -206,37 +206,39 @@
 
     .test-account {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
+      flex-direction: column;
+      gap: 6px;
+      padding: 14px 16px;
       background: rgba(0,240,255,0.06);
       border: 1px dashed rgba(0,240,255,0.3);
       border-radius: 8px;
       margin-bottom: 24px;
       cursor: pointer;
       transition: background 0.2s;
-      flex-wrap: wrap;
     }
     .test-account:hover { background: rgba(0,240,255,0.12); }
+    .test-account__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
     .test-account__label {
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 1px;
       color: var(--cyan);
       text-transform: uppercase;
-      white-space: nowrap;
     }
-    .test-account__info {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.7);
-      flex: 1;
-    }
-    .test-account__info b { color: var(--white); }
     .test-account__btn {
       font-size: 0.75rem;
       color: var(--cyan);
-      white-space: nowrap;
     }
+    .test-account__row {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+    }
+    .test-account__row b { color: var(--white); }
 
     .toast {
       position: fixed;
@@ -279,9 +281,12 @@
 
       <!-- 테스트 계정 안내 -->
       <div class="test-account" onclick="fillTest()">
-        <span class="test-account__label">테스트 계정</span>
-        <span class="test-account__info">아이디 <b>test</b> &nbsp;·&nbsp; 비밀번호 <b>test1234</b></span>
-        <span class="test-account__btn">자동 입력 ↗</span>
+        <div class="test-account__top">
+          <span class="test-account__label">테스트 계정</span>
+          <span class="test-account__btn">자동 입력 ↗</span>
+        </div>
+        <div class="test-account__row">아이디 &nbsp;<b>test</b></div>
+        <div class="test-account__row">비밀번호 &nbsp;<b>test1234</b></div>
       </div>
 
       <form onsubmit="handleLogin(event)">
