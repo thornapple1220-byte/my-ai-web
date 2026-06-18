@@ -95,13 +95,15 @@ function getBadgeClass(badge) {
 
 function renderContentCards(contents) {
   const grid = document.getElementById('contentGrid');
-  grid.innerHTML = contents.map((item, i) => `
-    <div class="card card--loaded" style="animation-delay:${i * 0.07}s"
-         onclick="showToast('${item.title} 재생을 시작합니다!')">
+  grid.innerHTML = contents.map((item, i) => {
+    const title  = item.title.replace(/'/g, "\\'");
+    const imgUrl = item.image_url.replace(/'/g, "\\'");
+    return `
+    <div class="card card--loaded" style="animation-delay:${i * 0.07}s">
       <div class="card__img-wrap">
         <img src="${item.image_url}" alt="${item.title}" loading="lazy" />
         ${item.badge ? `<span class="card__badge ${getBadgeClass(item.badge)}">${item.badge}</span>` : ''}
-        <div class="card__overlay">
+        <div class="card__overlay" onclick="openPlayer('${title}', '${imgUrl}')">
           <div class="card__overlay-inner">
             ${item.description ? `<p class="card__desc">${item.description}</p>` : ''}
             <div class="card__play">▶ 재생</div>
@@ -116,18 +118,20 @@ function renderContentCards(contents) {
         </div>
         <p class="card__info">${item.info ?? ''}</p>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderRecommendCards(recs) {
   const grid = document.getElementById('recommendGrid');
-  grid.innerHTML = recs.map((item, i) => `
-    <div class="rec-card card--loaded" style="animation-delay:${i * 0.1}s"
-         onclick="showToast('${item.title} 상세정보를 불러옵니다')">
+  grid.innerHTML = recs.map((item, i) => {
+    const title  = item.title.replace(/'/g, "\\'");
+    const imgUrl = item.image_url.replace(/'/g, "\\'");
+    return `
+    <div class="rec-card card--loaded" style="animation-delay:${i * 0.1}s">
       <div class="rec-card__img">
         <img src="${item.image_url}" alt="${item.title}" loading="lazy" />
-        <div class="rec-card__overlay">
+        <div class="rec-card__overlay" onclick="openPlayer('${title}', '${imgUrl}')">
           <div class="card__play">▶</div>
         </div>
       </div>
@@ -136,8 +140,8 @@ function renderRecommendCards(recs) {
         <p class="rec-card__genre">${item.genre ?? ''}</p>
         ${item.description ? `<p class="rec-card__desc">${item.description}</p>` : ''}
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 // ── 데이터 로드 (Supabase → fallback 순) ─────────────────────
@@ -166,9 +170,15 @@ document.addEventListener('DOMContentLoaded', loadData);
 let playerState = { playing: false, progress: 0, muted: false, timer: null, elapsed: 0 };
 const TOTAL_SEC = 157; // 2:37
 
-function openPlayer() {
+function openPlayer(title, imgUrl) {
+  if (title)  document.querySelector('.player-screen__title').textContent = title;
+  if (imgUrl) document.querySelector('.player-screen__bg').src = imgUrl;
   document.getElementById('playerBackdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
+  // 이전 재생 상태 초기화
+  playerState.elapsed = 0;
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('currentTime').textContent = '0:00';
   setTimeout(() => startPlay(), 400);
 }
 
