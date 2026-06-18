@@ -187,6 +187,8 @@
       if (logo) {
         var left = logo.getBoundingClientRect().left;
         hero.style.paddingLeft = left + 'px';
+        var scrollHint = document.querySelector('.hero__scroll-hint');
+        if (scrollHint) scrollHint.style.left = left + 'px';
       }
     }
     alignHeroToLogo();
