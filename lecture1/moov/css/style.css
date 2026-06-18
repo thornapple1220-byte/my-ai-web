@@ -160,7 +160,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   min-height: 100vh;
   display: flex;
   align-items: flex-start;
-  padding: 90px 60px 80px;
+  padding: 90px 40px 80px;
   overflow: hidden;
 }
 
