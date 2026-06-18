@@ -702,6 +702,39 @@ body { cursor: none; }
 }
 
 /* ===========================
+   Top Button
+=========================== */
+.top-btn {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1.5px solid var(--cyan);
+  color: var(--cyan);
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--glow-cyan);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s, box-shadow 0.2s;
+  pointer-events: none;
+}
+.top-btn.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.top-btn:hover {
+  background: var(--cyan);
+  color: var(--bg);
+  box-shadow: 0 0 24px rgba(0,240,255,0.7);
+}
+
+/* ===========================
    Reveal Animation (Scroll)
 =========================== */
 .reveal {

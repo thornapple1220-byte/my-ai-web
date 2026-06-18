@@ -60,10 +60,12 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
 }
 
-// ── 스크롤 헤더 효과 ─────────────────────────────────────────
+// ── 스크롤 헤더 효과 + 탑버튼 ───────────────────────────────
 const header = document.getElementById('header');
+const topBtn = document.getElementById('topBtn');
 window.addEventListener('scroll', () => {
   header.classList.toggle('scrolled', window.scrollY > 60);
+  topBtn?.classList.toggle('show', window.scrollY > 400);
 }, { passive: true });
 
 // ── 섹션 스크롤 이동 ─────────────────────────────────────────
