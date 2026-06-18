@@ -159,8 +159,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  padding: 120px 60px 80px;
+  align-items: flex-start;
+  padding: 90px 60px 80px;
   overflow: hidden;
 }
 
@@ -700,7 +700,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .header__inner { height: 60px; gap: 16px; }
   .nav { display: none; }
 
-  .hero { padding: 100px 24px 70px; min-height: 100svh; }
+  .hero { padding: 80px 24px 70px; min-height: 100svh; }
   .hero__scroll-hint { display: none; }
   .hero__title { font-size: clamp(3rem, 14vw, 5rem); }
   .hero__cta { flex-direction: column; }
