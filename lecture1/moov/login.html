@@ -204,6 +204,40 @@
       color: var(--cyan);
     }
 
+    .test-account {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: rgba(0,240,255,0.06);
+      border: 1px dashed rgba(0,240,255,0.3);
+      border-radius: 8px;
+      margin-bottom: 24px;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-wrap: wrap;
+    }
+    .test-account:hover { background: rgba(0,240,255,0.12); }
+    .test-account__label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .test-account__info {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.7);
+      flex: 1;
+    }
+    .test-account__info b { color: var(--white); }
+    .test-account__btn {
+      font-size: 0.75rem;
+      color: var(--cyan);
+      white-space: nowrap;
+    }
+
     .toast {
       position: fixed;
       bottom: 36px;
@@ -243,6 +277,13 @@
       <h1 class="login-card__title">로그인</h1>
       <p class="login-card__sub">MOOV 계정으로 계속하세요</p>
 
+      <!-- 테스트 계정 안내 -->
+      <div class="test-account" onclick="fillTest()">
+        <span class="test-account__label">테스트 계정</span>
+        <span class="test-account__info">아이디 <b>test</b> &nbsp;·&nbsp; 비밀번호 <b>test1234</b></span>
+        <span class="test-account__btn">자동 입력 ↗</span>
+      </div>
+
       <form onsubmit="handleLogin(event)">
         <div class="form-group">
           <label>아이디</label>
@@ -277,6 +318,12 @@
     const SUPABASE_URL = 'https://zhsgrijtbgfrflwwgwwp.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpoc2dyaWp0YmdmcmZsd3dnd3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTczODEsImV4cCI6MjA5NjQzMzM4MX0.FiE8krEBr4pqOdUx7k3_Sh4sqfOO7fB0H8sfr2Yfbbo';
     const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    function fillTest() {
+      document.getElementById('username').value = 'test';
+      document.getElementById('password').value = 'test1234';
+      showToast('테스트 계정이 입력되었습니다');
+    }
 
     let toastTimer = null;
     function showToast(msg) {
