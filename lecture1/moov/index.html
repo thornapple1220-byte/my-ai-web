@@ -181,7 +181,16 @@
     var hero = document.getElementById('hero');
     hero.style.alignItems = 'flex-start';
     hero.style.paddingTop = '90px';
-    hero.style.paddingLeft = '40px';
+    // 로고의 실제 left 위치에 맞춰 hero 콘텐츠 정렬
+    function alignHeroToLogo() {
+      var logo = document.querySelector('.logo');
+      if (logo) {
+        var left = logo.getBoundingClientRect().left;
+        hero.style.paddingLeft = left + 'px';
+      }
+    }
+    alignHeroToLogo();
+    window.addEventListener('resize', alignHeroToLogo);
   </script>
 </body>
 </html>
