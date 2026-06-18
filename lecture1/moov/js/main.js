@@ -162,6 +162,29 @@ async function loadData() {
 
 document.addEventListener('DOMContentLoaded', loadData);
 
+// ── 영상 플레이어 모달 ────────────────────────────────────────
+function openPlayer() {
+  const backdrop = document.getElementById('playerBackdrop');
+  const iframe   = document.getElementById('playerIframe');
+  // 블레이드 런너 2049 공식 예고편
+  iframe.src = 'https://www.youtube.com/embed/gCcx85zbxz4?autoplay=1&rel=0';
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePlayer(e) {
+  if (e && e.target !== document.getElementById('playerBackdrop')) return;
+  const backdrop = document.getElementById('playerBackdrop');
+  const iframe   = document.getElementById('playerIframe');
+  backdrop.classList.remove('open');
+  iframe.src = '';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePlayer(null);
+});
+
 // ── 커스텀 네온 커서 ─────────────────────────────────────────
 (function initCursor() {
   const dot  = document.createElement('div'); dot.id  = 'moov-cursor';

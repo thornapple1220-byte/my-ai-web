@@ -49,7 +49,7 @@
         <span class="meta__rating">⭐ 8.0</span>
       </div>
       <div class="hero__cta">
-        <button class="btn btn--primary" onclick="showToast('재생을 시작합니다!')">
+        <button class="btn btn--primary" onclick="openPlayer()">
           <span class="btn__icon">▶</span> 지금 재생
         </button>
         <button class="btn btn--outline" onclick="showToast('찜 목록에 추가되었습니다 ♥')">
@@ -173,6 +173,27 @@
 
   <!-- ====== TOAST ====== -->
   <div class="toast" id="toast"></div>
+
+  <!-- ====== 영상 플레이어 모달 ====== -->
+  <div class="player-backdrop" id="playerBackdrop" onclick="closePlayer(event)">
+    <div class="player-modal">
+      <div class="player-header">
+        <div class="player-info">
+          <span class="player-badge">NOW PLAYING</span>
+          <h3 class="player-title">블레이드 런너 2049 — 공식 예고편</h3>
+        </div>
+        <button class="player-close" onclick="closePlayer(null)" aria-label="닫기">✕</button>
+      </div>
+      <div class="player-screen">
+        <iframe
+          id="playerIframe"
+          src=""
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </div>
 
   <!-- ====== TOP 버튼 ====== -->
   <button class="top-btn" id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="맨 위로">
