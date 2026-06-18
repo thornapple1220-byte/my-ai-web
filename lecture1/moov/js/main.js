@@ -48,7 +48,7 @@ const FALLBACK_RECS = [
 // ── Supabase 초기화 ──────────────────────────────────────────
 const SUPABASE_URL = 'https://zhsgrijtbgfrflwwgwwp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpoc2dyaWp0YmdmcmZsd3dnd3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTczODEsImV4cCI6MjA5NjQzMzM4MX0.FiE8krEBr4pqOdUx7k3_Sh4sqfOO7fB0H8sfr2Yfbbo';
-const supabase = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── Toast 메시지 ─────────────────────────────────────────────
 let toastTimer = null;
@@ -145,11 +145,11 @@ async function loadData() {
   renderRecommendCards(FALLBACK_RECS);
 
   // Supabase에서 최신 데이터로 교체 시도
-  if (!supabase) return;
+  if (!supabaseClient) return;
   try {
     const [{ data: contents, error: e1 }, { data: recs, error: e2 }] = await Promise.all([
-      supabase.from('moov_contents').select('*').order('sort_order'),
-      supabase.from('moov_recommendations').select('*').order('sort_order'),
+      supabaseClient.from('moov_contents').select('*').order('sort_order'),
+      supabaseClient.from('moov_recommendations').select('*').order('sort_order'),
     ]);
     if (!e1 && contents?.length) renderContentCards(contents);
     if (!e2 && recs?.length) renderRecommendCards(recs);
