@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOOV — 당신의 무브먼트</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ====== HEADER ====== -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#" class="logo" onclick="showToast('MOOV 홈으로 이동합니다'); return false;">MOOV</a>
+      <nav class="nav">
+        <a href="#contents" class="nav__link" onclick="scrollToSection(event, 'contents')">콘텐츠</a>
+        <a href="#detail" class="nav__link" onclick="scrollToSection(event, 'detail')">상세정보</a>
+        <a href="#recommend" class="nav__link" onclick="scrollToSection(event, 'recommend')">추천</a>
+      </nav>
+      <button class="btn btn--neon" onclick="showToast('로그인 페이지로 이동합니다')">시작하기</button>
+    </div>
+  </header>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <div class="hero__gradient"></div>
+    </div>
+    <div class="hero__content reveal">
+      <span class="hero__badge">🎬 NOW STREAMING</span>
+      <h1 class="hero__title">
+        <span class="title--line">블레이드</span>
+        <span class="title--line title--neon">런너</span>
+        <span class="title--line">2049</span>
+      </h1>
+      <p class="hero__desc">
+        2049년, 세계는 붕괴했다. 새로운 블레이드 러너 K는<br />
+        오랫동안 묻혀있던 비밀을 파헤치기 시작한다.
+      </p>
+      <div class="hero__meta">
+        <span class="meta__tag">SF</span>
+        <span class="meta__tag">액션</span>
+        <span class="meta__dot">·</span>
+        <span>2017</span>
+        <span class="meta__dot">·</span>
+        <span>163분</span>
+        <span class="meta__rating">⭐ 8.0</span>
+      </div>
+      <div class="hero__cta">
+        <button class="btn btn--primary" onclick="showToast('재생을 시작합니다!')">
+          <span class="btn__icon">▶</span> 지금 재생
+        </button>
+        <button class="btn btn--outline" onclick="showToast('찜 목록에 추가되었습니다 ♥')">
+          <span class="btn__icon">＋</span> 찜하기
+        </button>
+      </div>
+    </div>
+    <div class="hero__scroll-hint">
+      <span>SCROLL</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ====== CONTENTS ====== -->
+  <section class="section contents-section" id="contents">
+    <div class="section__inner">
+      <div class="section__header reveal">
+        <h2 class="section__title">지금 인기 <span class="text--cyan">콘텐츠</span></h2>
+        <p class="section__desc">MOOV에서 가장 많이 본 작품들을 만나보세요</p>
+      </div>
+      <div class="card-grid" id="contentGrid">
+        <!-- JS로 동적 렌더링 -->
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+        <div class="card-skeleton"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== DETAIL ====== -->
+  <section class="section detail-section" id="detail">
+    <div class="section__inner">
+      <div class="detail-layout">
+        <div class="detail-banner reveal">
+          <div class="detail-banner__img">
+            <img
+              src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&h=500&fit=crop"
+              alt="블레이드 런너 2049"
+            />
+            <div class="detail-banner__overlay"></div>
+          </div>
+          <div class="detail-banner__content">
+            <span class="hero__badge">FEATURED</span>
+            <h3>블레이드 런너 2049</h3>
+            <p>드니 빌뇌브 감독의 SF 걸작</p>
+          </div>
+        </div>
+        <div class="detail-info reveal">
+          <h2 class="section__title">시놉시스</h2>
+          <p class="synopsis">
+            2049년을 배경으로 한 이 영화는 새로운 블레이드 러너 K(라이언 고슬링)가
+            오랫동안 묻혀있던 비밀을 파헤치면서 시작된다. 그가 발견한 것은 사회 질서를
+            무너뜨릴 수 있는 위험한 진실이었고, 그는 이 진실의 답을 찾기 위해
+            사라진 레플리컨트 전문 블레이드 러너 릭 데커드(해리슨 포드)를 추적한다.
+          </p>
+          <div class="cast-grid">
+            <div class="cast-card" onclick="showToast('라이언 고슬링 정보 보기')">
+              <div class="cast-card__avatar" style="background: linear-gradient(135deg, #00F0FF22, #00F0FF55);">RG</div>
+              <span class="cast-card__name">라이언 고슬링</span>
+              <span class="cast-card__role">K 역</span>
+            </div>
+            <div class="cast-card" onclick="showToast('해리슨 포드 정보 보기')">
+              <div class="cast-card__avatar" style="background: linear-gradient(135deg, #FF007A22, #FF007A55);">HF</div>
+              <span class="cast-card__name">해리슨 포드</span>
+              <span class="cast-card__role">릭 데커드 역</span>
+            </div>
+            <div class="cast-card" onclick="showToast('아나 드 아르마스 정보 보기')">
+              <div class="cast-card__avatar" style="background: linear-gradient(135deg, #00F0FF22, #FF007A44);">AA</div>
+              <span class="cast-card__name">아나 드 아르마스</span>
+              <span class="cast-card__role">조이 역</span>
+            </div>
+            <div class="cast-card" onclick="showToast('드니 빌뇌브 정보 보기')">
+              <div class="cast-card__avatar" style="background: linear-gradient(135deg, #FF007A22, #00F0FF44);">DV</div>
+              <span class="cast-card__name">드니 빌뇌브</span>
+              <span class="cast-card__role">감독</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== RECOMMENDATIONS ====== -->
+  <section class="section recommend-section" id="recommend">
+    <div class="section__inner">
+      <div class="section__header reveal">
+        <h2 class="section__title">이런 작품도 <span class="text--pink">좋아하실</span> 거예요</h2>
+        <p class="section__desc">당신의 취향에 맞는 MOOV 추천작</p>
+      </div>
+      <div class="recommend-grid" id="recommendGrid">
+        <!-- JS로 동적 렌더링 -->
+        <div class="card-skeleton card-skeleton--wide"></div>
+        <div class="card-skeleton card-skeleton--wide"></div>
+        <div class="card-skeleton card-skeleton--wide"></div>
+        <div class="card-skeleton card-skeleton--wide"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <a href="#" class="logo footer__logo" onclick="showToast('MOOV 홈으로 이동합니다'); return false;">MOOV</a>
+        <p class="footer__tagline">당신의 모든 무브먼트를 함께합니다</p>
+      </div>
+      <div class="footer__links">
+        <a href="#" class="footer__link" onclick="showToast('이용약관 페이지로 이동합니다'); return false;">이용약관</a>
+        <a href="#" class="footer__link" onclick="showToast('개인정보처리방침 페이지로 이동합니다'); return false;">개인정보처리방침</a>
+        <a href="#" class="footer__link" onclick="showToast('고객센터 페이지로 이동합니다'); return false;">고객센터</a>
+        <a href="#" class="footer__link" onclick="showToast('회사 소개 페이지로 이동합니다'); return false;">회사소개</a>
+      </div>
+      <p class="footer__copy">© 2024 MOOV Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ====== TOAST ====== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
