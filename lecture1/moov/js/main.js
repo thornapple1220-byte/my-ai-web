@@ -56,15 +56,19 @@ function renderContentCards(contents) {
         <img src="${item.image_url}" alt="${item.title}" loading="lazy" />
         ${item.badge ? `<span class="card__badge ${getBadgeClass(item.badge)}">${item.badge}</span>` : ''}
         <div class="card__overlay">
-          <div class="card__play">▶</div>
+          <div class="card__overlay-inner">
+            ${item.description ? `<p class="card__desc">${item.description}</p>` : ''}
+            <div class="card__play">▶ 재생</div>
+          </div>
         </div>
       </div>
       <div class="card__body">
         <p class="card__title">${item.title}</p>
         <div class="card__meta">
-          <span class="card__genre">${item.genre ?? ''} · ${item.info ?? ''}</span>
+          <span class="card__genre">${item.genre ?? ''}</span>
           <span class="card__rating">⭐ ${item.rating ?? ''}</span>
         </div>
+        <p class="card__info">${item.info ?? ''}</p>
       </div>
     </div>
   `).join('');
@@ -80,10 +84,14 @@ function renderRecommendCards(recs) {
     <div class="rec-card reveal" onclick="showToast('${item.title} 상세정보를 불러옵니다')">
       <div class="rec-card__img">
         <img src="${item.image_url}" alt="${item.title}" loading="lazy" />
+        <div class="rec-card__overlay">
+          <div class="card__play">▶</div>
+        </div>
       </div>
       <div class="rec-card__body">
         <p class="rec-card__title">${item.title}</p>
         <p class="rec-card__genre">${item.genre ?? ''}</p>
+        ${item.description ? `<p class="rec-card__desc">${item.description}</p>` : ''}
       </div>
     </div>
   `).join('');
