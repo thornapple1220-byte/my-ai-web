@@ -164,7 +164,42 @@ async function loadData() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', loadData);
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  checkAuth();
+});
+
+// ── 로그인 상태 확인 및 버튼 전환 ────────────────────────────
+async function checkAuth() {
+  if (!supabaseClient) return;
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  updateAuthBtn(!!session);
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    updateAuthBtn(!!session);
+  });
+}
+
+function updateAuthBtn(isLoggedIn) {
+  const btn = document.getElementById('authBtn');
+  if (!btn) return;
+  if (isLoggedIn) {
+    btn.textContent = '로그아웃';
+    btn.removeAttribute('href');
+    btn.onclick = async () => {
+      await supabaseClient.auth.signOut();
+      showToast('로그아웃 되었습니다');
+    };
+    btn.style.borderColor = 'rgba(255,0,122,0.6)';
+    btn.style.color = '#FF007A';
+  } else {
+    btn.textContent = '로그인';
+    btn.setAttribute('href', 'login.html');
+    btn.onclick = null;
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }
+}
 
 // ── 영상 플레이어 모달 ────────────────────────────────────────
 let playerState = { playing: false, progress: 0, muted: false, timer: null, elapsed: 0 };
