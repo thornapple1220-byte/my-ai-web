@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MOOV — 당신의 무브먼트</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet" />
 </head>
@@ -24,7 +24,7 @@
   </header>
 
   <!-- ====== HERO ====== -->
-  <section class="hero" id="hero">
+  <section class="hero" id="hero" style="align-items:flex-start;padding-top:90px;">
     <div class="hero__bg">
       <div class="hero__gradient"></div>
     </div>
@@ -177,5 +177,10 @@
   <!-- Supabase CDN (UMD bundle — window.supabase 노출) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    var hero = document.getElementById('hero');
+    hero.style.alignItems = 'flex-start';
+    hero.style.paddingTop = '90px';
+  </script>
 </body>
 </html>
