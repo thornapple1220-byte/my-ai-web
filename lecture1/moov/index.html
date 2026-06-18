@@ -177,21 +177,55 @@
   <!-- ====== 영상 플레이어 모달 ====== -->
   <div class="player-backdrop" id="playerBackdrop" onclick="closePlayer(event)">
     <div class="player-modal">
-      <div class="player-header">
-        <div class="player-info">
-          <span class="player-badge">NOW PLAYING</span>
-          <h3 class="player-title">블레이드 런너 2049 — 공식 예고편</h3>
-        </div>
-        <button class="player-close" onclick="closePlayer(null)" aria-label="닫기">✕</button>
-      </div>
+
+      <!-- 영상 화면 -->
       <div class="player-screen">
-        <iframe
-          id="playerIframe"
-          src=""
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+        <img class="player-screen__bg"
+          src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=900&h=506&fit=crop"
+          alt="블레이드 런너 2049" />
+        <div class="player-screen__dim" id="playerDim"></div>
+
+        <!-- 중앙 재생 버튼 -->
+        <button class="player-center-btn" id="playerCenterBtn" onclick="togglePlay()">
+          <span id="playerCenterIcon">▶</span>
+        </button>
+
+        <!-- 상단 제목 -->
+        <div class="player-top-bar">
+          <span class="player-badge">MOOV</span>
+          <span class="player-screen__title">블레이드 런너 2049</span>
+          <button class="player-close" onclick="closePlayer(null)">✕</button>
+        </div>
+
+        <!-- 하단 컨트롤 바 -->
+        <div class="player-controls" id="playerControls">
+          <!-- 프로그레스 바 -->
+          <div class="player-progress" onclick="seekPlayer(event)">
+            <div class="player-progress__bar" id="progressBar">
+              <div class="player-progress__dot"></div>
+            </div>
+          </div>
+
+          <div class="player-controls__row">
+            <!-- 왼쪽: 재생/일시정지, 시간 -->
+            <div class="player-controls__left">
+              <button class="ctrl-btn" id="playBtn" onclick="togglePlay()">▶</button>
+              <button class="ctrl-btn" onclick="showToast('10초 뒤로')">⟪</button>
+              <button class="ctrl-btn" onclick="showToast('10초 앞으로')">⟫</button>
+              <span class="player-time"><span id="currentTime">0:00</span> / <span id="totalTime">2:37</span></span>
+            </div>
+            <!-- 오른쪽: 볼륨, 자막, 화질, 전체화면 -->
+            <div class="player-controls__right">
+              <button class="ctrl-btn" id="muteBtn" onclick="toggleMute()">🔊</button>
+              <input class="player-volume" id="volumeSlider" type="range" min="0" max="100" value="80" oninput="setVolume(this.value)" />
+              <button class="ctrl-btn" onclick="showToast('자막: 한국어')">CC</button>
+              <button class="ctrl-btn" onclick="showToast('화질: 1080p')">HD</button>
+              <button class="ctrl-btn" onclick="showToast('전체화면')">⛶</button>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 

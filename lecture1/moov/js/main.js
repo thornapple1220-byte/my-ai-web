@@ -163,26 +163,82 @@ async function loadData() {
 document.addEventListener('DOMContentLoaded', loadData);
 
 // ── 영상 플레이어 모달 ────────────────────────────────────────
+let playerState = { playing: false, progress: 0, muted: false, timer: null, elapsed: 0 };
+const TOTAL_SEC = 157; // 2:37
+
 function openPlayer() {
-  const backdrop = document.getElementById('playerBackdrop');
-  const iframe   = document.getElementById('playerIframe');
-  // 블레이드 런너 2049 공식 예고편
-  iframe.src = 'https://www.youtube.com/embed/gCcx85zbxz4?autoplay=1&rel=0';
-  backdrop.classList.add('open');
+  document.getElementById('playerBackdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
+  setTimeout(() => startPlay(), 400);
 }
 
 function closePlayer(e) {
   if (e && e.target !== document.getElementById('playerBackdrop')) return;
-  const backdrop = document.getElementById('playerBackdrop');
-  const iframe   = document.getElementById('playerIframe');
-  backdrop.classList.remove('open');
-  iframe.src = '';
+  stopPlay();
+  document.getElementById('playerBackdrop').classList.remove('open');
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('currentTime').textContent = '0:00';
+  playerState.elapsed = 0;
   document.body.style.overflow = '';
+}
+
+function togglePlay() {
+  playerState.playing ? stopPlay() : startPlay();
+}
+
+function startPlay() {
+  playerState.playing = true;
+  document.getElementById('playBtn').textContent        = '⏸';
+  document.getElementById('playerCenterIcon').textContent = '⏸';
+  document.getElementById('playerCenterBtn').classList.remove('paused');
+  document.getElementById('playerDim').classList.remove('paused');
+  clearInterval(playerState.timer);
+  playerState.timer = setInterval(() => {
+    playerState.elapsed = Math.min(playerState.elapsed + 1, TOTAL_SEC);
+    const pct = (playerState.elapsed / TOTAL_SEC) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('currentTime').textContent = fmtTime(playerState.elapsed);
+    if (playerState.elapsed >= TOTAL_SEC) stopPlay();
+  }, 1000);
+}
+
+function stopPlay() {
+  playerState.playing = false;
+  clearInterval(playerState.timer);
+  document.getElementById('playBtn').textContent        = '▶';
+  document.getElementById('playerCenterIcon').textContent = '▶';
+  document.getElementById('playerCenterBtn').classList.add('paused');
+  document.getElementById('playerDim').classList.add('paused');
+}
+
+function seekPlayer(e) {
+  const bar = e.currentTarget;
+  const pct = e.offsetX / bar.offsetWidth;
+  playerState.elapsed = Math.floor(pct * TOTAL_SEC);
+  document.getElementById('progressBar').style.width = (pct * 100) + '%';
+  document.getElementById('currentTime').textContent = fmtTime(playerState.elapsed);
+}
+
+function toggleMute() {
+  playerState.muted = !playerState.muted;
+  document.getElementById('muteBtn').textContent = playerState.muted ? '🔇' : '🔊';
+  document.getElementById('volumeSlider').value  = playerState.muted ? 0 : 80;
+}
+
+function setVolume(v) {
+  playerState.muted = v == 0;
+  document.getElementById('muteBtn').textContent = v == 0 ? '🔇' : '🔊';
+}
+
+function fmtTime(s) {
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
 }
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closePlayer(null);
+  if (e.key === ' ' && document.getElementById('playerBackdrop').classList.contains('open')) {
+    e.preventDefault(); togglePlay();
+  }
 });
 
 // ── 커스텀 네온 커서 ─────────────────────────────────────────
