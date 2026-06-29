@@ -1,0 +1,3 @@
+[submodule "lecture1/my-portfolio"]
+	path = lecture1/my-portfolio
+	url = https://github.com/thornapple1220-byte/my-portfolio.git
